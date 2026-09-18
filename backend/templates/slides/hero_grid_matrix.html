@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slide {{ slide_number|default(1) }} - Grid Matrix Hero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,600&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  width: 1080px; height: 1350px;
+  background: #000000;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  overflow: hidden;
+  color: #FFFFFF;
+}
+.bg-image {
+  position: absolute; inset: 0;
+  background-image: url('{{ background_image_url }}');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.44;
+}
+.bg-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0.70) 45%, rgba(0,0,0,0.92) 100%);
+}
+.glow-orb-teal {
+  position: absolute;
+  width: 580px; height: 580px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.28) 0%, rgba(6, 182, 212, 0.12) 50%, transparent 70%);
+  filter: blur(85px);
+  top: 18%; right: -120px;
+  pointer-events: none;
+}
+.glow-orb-indigo {
+  position: absolute;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(124, 58, 237, 0.1) 50%, transparent 70%);
+  filter: blur(85px);
+  bottom: 20%; left: -100px;
+  pointer-events: none;
+}
+.content {
+  position: relative; z-index: 2;
+  padding: 60px 70px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.matrix-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 20px;
+  background: rgba(20, 184, 166, 0.12);
+  border: 1px solid rgba(20, 184, 166, 0.4);
+  border-radius: 9999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: #2DD4BF;
+  box-shadow: 0 0 18px rgba(20, 184, 166, 0.25);
+}
+.matrix-indicator {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #2DD4BF;
+  box-shadow: 0 0 10px #2DD4BF;
+}
+.slide-num {
+  font-size: 26px; color: #9CA3AF; font-weight: 500;
+  letter-spacing: 2px;
+}
+.main-body {
+  margin-top: auto;
+  margin-bottom: 36px;
+}
+.headline {
+  font-size: 100px; font-weight: 900;
+  line-height: 0.96;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  margin-bottom: 30px;
+  letter-spacing: -0.02em;
+}
+.gradient-text {
+  background: linear-gradient(135deg, #2DD4BF 0%, #38BDF8 50%, #818CF8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline;
+}
+
+/* Wireframe Node Card */
+.node-wireframe-card {
+  margin: 28px 0 32px 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(45, 212, 191, 0.3);
+  border-radius: 18px;
+  padding: 22px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+.node-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  letter-spacing: 1.5px;
+  color: #94A3B8;
+  text-transform: uppercase;
+}
+.node-val {
+  font-size: 22px;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-top: 4px;
+}
+.node-chip {
+  background: rgba(20, 184, 166, 0.2);
+  border: 1px solid #2DD4BF;
+  color: #2DD4BF;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 10px;
+}
+
+.subtext {
+  font-size: 32px; color: #D1D5DB;
+  line-height: 1.4; margin-bottom: 24px;
+  max-width: 900px;
+}
+.annotation {
+  font-family: 'Caveat', 'Inter', cursive;
+  font-style: italic; font-size: 36px;
+  color: #2DD4BF; margin-bottom: 20px;
+  line-height: 1.3;
+  text-shadow: 0 0 20px rgba(45, 212, 191, 0.4);
+}
+.bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dots span {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: #374151;
+}
+.dots span.active {
+  background: #2DD4BF;
+  width: 34px;
+  border-radius: 6px;
+  box-shadow: 0 0 14px rgba(45, 212, 191, 0.7);
+}
+.arrow {
+  font-size: 40px;
+  color: #FFFFFF;
+  line-height: 1;
+}
+</style>
+</head>
+<body>
+<div class="bg-image"></div>
+<div class="bg-overlay"></div>
+<div class="glow-orb-teal"></div>
+<div class="glow-orb-indigo"></div>
+<div class="content">
+  <div class="top-bar">
+    <div class="matrix-badge">
+      <span class="matrix-indicator"></span>
+      <span>MATRIX INDEX // VERIFIED</span>
+    </div>
+    <div class="slide-num">{{ slide_counter|default('01 / 06') }}</div>
+  </div>
+
+  <div class="main-body">
+    <div class="headline">
+      {% if line1 %}
+        {{ line1 }}<br>
+        {% if line2 %}{{ line2 }}<br>{% endif %}
+        {% if line3 %}{{ line3 }}<br>{% endif %}
+        <span class="gradient-text">{{ gradient_word|default(headline_highlight) }}</span>
+        {% if line5 %}<br>{{ line5 }}{% endif %}
+      {% elif headline_prefix and headline_highlight %}
+        {{ headline_prefix }}<br>
+        <span class="gradient-text">{{ headline_highlight }}</span>
+        {% if headline_suffix %}<br>{{ headline_suffix }}{% endif %}
+      {% else %}
+        {{ headline|default('INTELLIGENT COMPUTATION WITH') }}<br>
+        <span class="gradient-text">{{ headline_highlight|default('AUTONOMOUS AI') }}</span>
+      {% endif %}
+    </div>
+
+    <div class="node-wireframe-card">
+      <div>
+        <div class="node-title">ACTIVE COGNITIVE ENGINE</div>
+        <div class="node-val">{{ tool_name|default('Neural Reasoning Agent') }}</div>
+      </div>
+      <div class="node-chip">99.8% ACCURACY</div>
+    </div>
+
+    <div class="subtext">{{ subtext|default(body_text)|default('Instant multi-agent synthesis that solves hours of manual tasks in seconds.') }}</div>
+    <div class="annotation">◈ {{ annotation|default(annotation_text)|default('Swipe through the live benchmarks') }}</div>
+  </div>
+
+  <div class="bottom-row">
+    <div class="dots">
+      <span class="active"></span>
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="arrow">→</div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slide {{ slide_number|default(5) }} - Workflow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  width: 1080px; height: 1350px;
+  background: #000000;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  overflow: hidden;
+  color: #FFFFFF;
+}
+.bg-image {
+  position: absolute; inset: 0;
+  background-image: url('{{ background_image_url }}');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.42;
+}
+.bg-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.72) 50%, rgba(0,0,0,0.90) 100%);
+}
+.glow-orb {
+  position: absolute;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.22) 0%, transparent 70%);
+  filter: blur(80px);
+  top: 35%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.content {
+  position: relative; z-index: 2;
+  padding: 60px 70px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.slide-num {
+  align-self: flex-end;
+  font-size: 26px; color: #9CA3AF; font-weight: 500;
+  letter-spacing: 2px;
+}
+.header-wrap {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+.headline {
+  font-size: 96px; font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+.gradient-text {
+  background: linear-gradient(135deg, #A855F7, #3B82F6, #EC4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+.subtext {
+  font-size: 34px; color: #D1D5DB;
+  line-height: 1.4; margin-top: 18px;
+}
+.workflow-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  flex: 1;
+}
+.wf-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+.wf-num {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: #5B21B6;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; font-weight: 900; color: white;
+  flex-shrink: 0;
+  box-shadow: 0 0 16px rgba(91, 33, 182, 0.5);
+}
+.wf-content {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.wf-title {
+  font-size: 32px; font-weight: 700; color: #FFFFFF;
+}
+.wf-desc {
+  font-size: 24px; color: #9CA3AF; line-height: 1.3;
+}
+.annotation {
+  font-family: 'Caveat', 'Inter', cursive;
+  font-style: italic; font-size: 30px;
+  color: #F472B6;
+  text-shadow: 0 0 15px rgba(244, 114, 182, 0.45);
+  text-align: right;
+  margin-bottom: 12px;
+}
+.bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dots span {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: #4B5563;
+}
+.dots span.active {
+  background: #7C3AED;
+  width: 32px;
+  border-radius: 6px;
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.6);
+}
+.arrow {
+  font-size: 40px;
+  color: #FFFFFF;
+  line-height: 1;
+}
+</style>
+</head>
+<body>
+<div class="bg-image"></div>
+<div class="bg-overlay"></div>
+<div class="glow-orb"></div>
+<div class="content">
+  <div class="slide-num">{{ slide_counter|default('05 / 06') }}</div>
+
+  <div class="header-wrap">
+    <div class="headline">
+      {% if headline_prefix and headline_highlight %}
+        {{ headline_prefix }} <span class="gradient-text">{{ headline_highlight }}</span>
+      {% else %}
+        AUTOMATED <span class="gradient-text">WORKFLOW</span>
+      {% endif %}
+    </div>
+    <div class="subtext">{{ body_text|default(subtext)|default('Connect the pieces into an end-to-end pipeline.') }}</div>
+  </div>
+
+  <div class="workflow-stage">
+    {% if workflow_nodes and workflow_nodes|length > 0 %}
+      {% for node in workflow_nodes[:3] %}
+        <div class="wf-card">
+          <div class="wf-num">0{{ loop.index }}</div>
+          <div class="wf-content">
+            <div class="wf-title">{{ node.title|default('Node ' ~ loop.index) }}</div>
+            <div class="wf-desc">{{ node.desc|default(node.description)|default('') }}</div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="wf-card">
+        <div class="wf-num">01</div>
+        <div class="wf-content">
+          <div class="wf-title">Input Source</div>
+          <div class="wf-desc">Ingest raw text prompt or structured data.</div>
+        </div>
+      </div>
+      <div class="wf-card">
+        <div class="wf-num">02</div>
+        <div class="wf-content">
+          <div class="wf-title">AI Processing Engine</div>
+          <div class="wf-desc">Generate visuals, audio, and captions concurrently.</div>
+        </div>
+      </div>
+      <div class="wf-card">
+        <div class="wf-num">03</div>
+        <div class="wf-content">
+          <div class="wf-title">Automated Publishing</div>
+          <div class="wf-desc">Deploy directly to target social channels.</div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="annotation">
+    {{ annotation|default(annotation_text)|default('Seamless end-to-end execution.') }} ↘
+  </div>
+
+  <div class="bottom-row">
+    <div class="dots">
+      <span></span><span></span><span></span><span></span>
+      <span class="active"></span>
+      <span></span>
+    </div>
+    <div class="arrow">→</div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slide {{ slide_number|default(1) }} - Minimal Bold Hero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,600&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  width: 1080px; height: 1350px;
+  background: #000000;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  overflow: hidden;
+  color: #FFFFFF;
+}
+.bg-image {
+  position: absolute; inset: 0;
+  background-image: url('{{ background_image_url }}');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.44;
+}
+.bg-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.72) 50%, rgba(0,0,0,0.90) 100%);
+}
+.glow-orb-lime {
+  position: absolute;
+  width: 520px; height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, rgba(6, 182, 212, 0.12) 50%, transparent 70%);
+  filter: blur(85px);
+  top: 15%; left: -80px;
+  pointer-events: none;
+}
+.glow-orb-purple {
+  position: absolute;
+  width: 550px; height: 550px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.3) 0%, rgba(236, 72, 153, 0.1) 50%, transparent 70%);
+  filter: blur(85px);
+  bottom: 18%; right: -100px;
+  pointer-events: none;
+}
+.vertical-accent-line {
+  position: absolute;
+  left: 50px; top: 120px; bottom: 120px;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, #10B981 30%, #06B6D4 70%, transparent);
+  opacity: 0.7;
+}
+.content {
+  position: relative; z-index: 2;
+  padding: 60px 70px 60px 80px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tech-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #34D399;
+}
+.slide-num {
+  font-size: 26px; color: #9CA3AF; font-weight: 500;
+  letter-spacing: 2px;
+}
+.main-body {
+  margin-top: auto;
+  margin-bottom: 40px;
+}
+.headline {
+  font-size: 104px; font-weight: 900;
+  line-height: 0.94;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  margin-bottom: 36px;
+  letter-spacing: -0.03em;
+}
+.gradient-text {
+  background: linear-gradient(135deg, #34D399 0%, #22D3EE 50%, #818CF8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline;
+}
+.quote-bar {
+  margin: 32px 0 36px 0;
+  padding: 22px 28px;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  border-left: 5px solid #10B981;
+  border-radius: 0 16px 16px 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #F3F4F6;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+}
+.subtext {
+  font-size: 32px; color: #D1D5DB;
+  line-height: 1.4; margin-bottom: 24px;
+  max-width: 900px;
+}
+.annotation {
+  font-family: 'Caveat', 'Inter', cursive;
+  font-style: italic; font-size: 36px;
+  color: #34D399; margin-bottom: 20px;
+  line-height: 1.3;
+  text-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
+}
+.bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dots span {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: #374151;
+}
+.dots span.active {
+  background: #10B981;
+  width: 34px;
+  border-radius: 6px;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.7);
+}
+.arrow {
+  font-size: 40px;
+  color: #FFFFFF;
+  line-height: 1;
+}
+</style>
+</head>
+<body>
+<div class="bg-image"></div>
+<div class="bg-overlay"></div>
+<div class="glow-orb-lime"></div>
+<div class="glow-orb-purple"></div>
+<div class="vertical-accent-line"></div>
+<div class="content">
+  <div class="top-bar">
+    <div class="tech-tag">
+      <span>//</span>
+      <span>AI EXPERIMENT</span>
+    </div>
+    <div class="slide-num">{{ slide_counter|default('01 / 06') }}</div>
+  </div>
+
+  <div class="main-body">
+    <div class="headline">
+      {% if line1 %}
+        {{ line1 }}<br>
+        {% if line2 %}{{ line2 }}<br>{% endif %}
+        {% if line3 %}{{ line3 }}<br>{% endif %}
+        <span class="gradient-text">{{ gradient_word|default(headline_highlight) }}</span>
+        {% if line5 %}<br>{{ line5 }}{% endif %}
+      {% elif headline_prefix and headline_highlight %}
+        {{ headline_prefix }}<br>
+        <span class="gradient-text">{{ headline_highlight }}</span>
+        {% if headline_suffix %}<br>{{ headline_suffix }}{% endif %}
+      {% else %}
+        {{ headline|default('SHATTERING SPEED LIMITS WITH') }}<br>
+        <span class="gradient-text">{{ headline_highlight|default('AI AUTOMATION') }}</span>
+      {% endif %}
+    </div>
+
+    <div class="quote-bar">
+      {{ tool_name|default('Supercharged AI Stack') }} &mdash; Built for extreme velocity.
+    </div>
+
+    <div class="subtext">{{ subtext|default(body_text)|default('Explore the full architectural breakdown and hands-on walkthrough.') }}</div>
+    <div class="annotation">↗ {{ annotation|default(annotation_text)|default('Swipe through the technical breakdown') }}</div>
+  </div>
+
+  <div class="bottom-row">
+    <div class="dots">
+      <span class="active"></span>
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="arrow">→</div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slide {{ slide_number|default(5) }} - Real Examples / Practical Value</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  width: 1080px; height: 1350px;
+  background: #000000;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  overflow: hidden;
+  color: #FFFFFF;
+}
+.bg-image {
+  position: absolute; inset: 0;
+  background-image: url('{{ background_image_url }}');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.42;
+}
+.bg-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.72) 50%, rgba(0,0,0,0.90) 100%);
+}
+.glow-orb {
+  position: absolute;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.22) 0%, transparent 70%);
+  filter: blur(80px);
+  top: 35%; right: -80px;
+  pointer-events: none;
+}
+.content {
+  position: relative; z-index: 2;
+  padding: 60px 70px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.slide-num {
+  align-self: flex-end;
+  font-size: 26px; color: #9CA3AF; font-weight: 500;
+  letter-spacing: 2px;
+}
+.header-wrap {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+.headline {
+  font-size: 96px; font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+.gradient-text {
+  background: linear-gradient(135deg, #A855F7, #3B82F6, #EC4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+.subtext {
+  font-size: 34px; color: #D1D5DB;
+  line-height: 1.4; margin-top: 18px;
+}
+.cards-stage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  position: relative;
+}
+.example-card {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 24px;
+  align-items: center;
+}
+.prompt-box {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 20px 24px;
+  flex: 1;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+.prompt-label {
+  font-size: 22px; color: #7C3AED;
+  font-weight: 700; margin-bottom: 8px;
+  text-transform: uppercase; letter-spacing: 2px;
+}
+.prompt-text {
+  font-size: 28px; color: #F3F4F6;
+  font-style: italic; line-height: 1.3;
+}
+.result-thumb {
+  width: 200px; height: 130px;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #111827;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+.thumb-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.play-badge {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+.annotation {
+  position: absolute;
+  right: 0;
+  top: -25px;
+  font-family: 'Caveat', 'Inter', cursive;
+  font-style: italic; font-size: 30px;
+  color: #F472B6;
+  text-shadow: 0 0 15px rgba(244, 114, 182, 0.45);
+}
+.bottom-quote {
+  font-size: 28px; color: #9CA3AF;
+  font-style: italic;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 24px;
+  padding: 0 40px;
+  line-height: 1.4;
+}
+.bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dots span {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: #4B5563;
+}
+.dots span.active {
+  background: #7C3AED;
+  width: 32px;
+  border-radius: 6px;
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.6);
+}
+.arrow {
+  font-size: 40px;
+  color: #FFFFFF;
+  line-height: 1;
+}
+</style>
+</head>
+<body>
+<div class="bg-image"></div>
+<div class="bg-overlay"></div>
+<div class="glow-orb"></div>
+<div class="content">
+  <div class="slide-num">{{ slide_counter|default('05 / 06') }}</div>
+
+  <div class="header-wrap">
+    <div class="headline">
+      {% if headline_prefix and headline_highlight %}
+        {{ headline_prefix }} <span class="gradient-text">{{ headline_highlight }}</span>
+      {% else %}
+        REAL <span class="gradient-text">EXAMPLES</span>
+      {% endif %}
+    </div>
+    <div class="subtext">{{ body_text|default(subtext)|default('Same prompt. Different worlds.') }}</div>
+  </div>
+
+  <div class="cards-stage">
+    <div class="annotation">{{ annotation|default(annotation_text)|default('Text in. This out.') }} ↘</div>
+    {% if examples and examples|length > 0 %}
+      {% for ex in examples[:3] %}
+        <div class="example-card">
+          <div class="prompt-box">
+            <div class="prompt-label">{{ ex.tag|default('PROMPT ' ~ loop.index) }}</div>
+            <div class="prompt-text">"{{ ex.prompt|default('Describe your idea in detail...') }}"</div>
+          </div>
+          <div class="result-thumb">
+            {% if loop.index == 1 and asset_s5_city %}
+              <img class="thumb-img" src="{{ asset_s5_city }}" alt="Output">
+            {% elif loop.index == 2 and asset_s5_lion %}
+              <img class="thumb-img" src="{{ asset_s5_lion }}" alt="Output">
+            {% elif loop.index == 3 and asset_s5_cat %}
+              <img class="thumb-img" src="{{ asset_s5_cat }}" alt="Output">
+            {% else %}
+              <div style="width:100%;height:100%;background:linear-gradient(135deg,#1E1B4B,#0F172A);"></div>
+            {% endif %}
+            <div class="play-badge">▶</div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="example-card">
+        <div class="prompt-box">
+          <div class="prompt-label">Futuristic City</div>
+          <div class="prompt-text">"A futuristic city at sunset with flying cars and neon skyway..."</div>
+        </div>
+        <div class="result-thumb">
+          {% if asset_s5_city %}<img class="thumb-img" src="{{ asset_s5_city }}" alt="Output">{% endif %}
+          <div class="play-badge">▶</div>
+        </div>
+      </div>
+      <div class="example-card">
+        <div class="prompt-box">
+          <div class="prompt-label">Wildlife 4K</div>
+          <div class="prompt-text">"A close up of a majestic lion in the wild, cinematic lighting..."</div>
+        </div>
+        <div class="result-thumb">
+          {% if asset_s5_lion %}<img class="thumb-img" src="{{ asset_s5_lion }}" alt="Output">{% endif %}
+          <div class="play-badge">▶</div>
+        </div>
+      </div>
+      <div class="example-card">
+        <div class="prompt-box">
+          <div class="prompt-label">Cozy Interior</div>
+          <div class="prompt-text">"A cozy room during rain, with a sleeping cat and warm fireplace..."</div>
+        </div>
+        <div class="result-thumb">
+          {% if asset_s5_cat %}<img class="thumb-img" src="{{ asset_s5_cat }}" alt="Output">{% endif %}
+          <div class="play-badge">▶</div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="bottom-quote">
+    "{{ quote|default('It literally feels like bringing your imagination to life.') }}"
+  </div>
+
+  <div class="bottom-row">
+    <div class="dots">
+      <span></span><span></span><span></span><span></span>
+      <span class="active"></span>
+      <span></span>
+    </div>
+    <div class="arrow">→</div>
+  </div>
+</div>
+</body>
+</html>

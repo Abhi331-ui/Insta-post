@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+__pycache__/
+.pytest_cache/
+.next/
+node_modules/
+media/slides/
+
+# Keep real application assets tracked
+!backend/templates/slides/assets/
+!backend/templates/slides/assets/**

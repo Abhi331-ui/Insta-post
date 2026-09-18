@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slide {{ slide_number|default(1) }} - Blueprint Hero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,600&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  width: 1080px; height: 1350px;
+  background: #000000;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  overflow: hidden;
+  color: #FFFFFF;
+}
+.bg-image {
+  position: absolute; inset: 0;
+  background-image: url('{{ background_image_url }}');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.44;
+}
+.bg-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.72) 45%, rgba(0,0,0,0.92) 100%);
+}
+.glow-orb-blue {
+  position: absolute;
+  width: 580px; height: 580px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.28) 0%, rgba(6, 182, 212, 0.12) 50%, transparent 70%);
+  filter: blur(85px);
+  top: 15%; left: -100px;
+  pointer-events: none;
+}
+.glow-orb-cyan {
+  position: absolute;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.24) 0%, rgba(124, 58, 237, 0.1) 50%, transparent 70%);
+  filter: blur(85px);
+  bottom: 20%; right: -100px;
+  pointer-events: none;
+}
+
+/* Blueprint Corner Brackets */
+.corner-tl { position: absolute; top: 40px; left: 40px; width: 28px; height: 28px; border-top: 2px solid #06B6D4; border-left: 2px solid #06B6D4; z-index: 3; }
+.corner-tr { position: absolute; top: 40px; right: 40px; width: 28px; height: 28px; border-top: 2px solid #06B6D4; border-right: 2px solid #06B6D4; z-index: 3; }
+.corner-bl { position: absolute; bottom: 40px; left: 40px; width: 28px; height: 28px; border-bottom: 2px solid #06B6D4; border-left: 2px solid #06B6D4; z-index: 3; }
+.corner-br { position: absolute; bottom: 40px; right: 40px; width: 28px; height: 28px; border-bottom: 2px solid #06B6D4; border-right: 2px solid #06B6D4; z-index: 3; }
+
+.content {
+  position: relative; z-index: 2;
+  padding: 60px 70px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.spec-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: #06B6D4;
+  letter-spacing: 2px;
+}
+.slide-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px; color: #9CA3AF; font-weight: 600;
+  letter-spacing: 2px;
+}
+.main-body {
+  margin-top: auto;
+  margin-bottom: 36px;
+}
+.headline {
+  font-size: 100px; font-weight: 900;
+  line-height: 0.96;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  margin-bottom: 30px;
+  letter-spacing: -0.02em;
+}
+.gradient-text {
+  background: linear-gradient(135deg, #06B6D4 0%, #3B82F6 50%, #9333EA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline;
+}
+
+/* Schematic Spec Box */
+.schematic-box {
+  margin: 30px 0 32px 0;
+  background: rgba(8, 20, 40, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px dashed rgba(6, 182, 212, 0.4);
+  border-radius: 16px;
+  padding: 22px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+.schematic-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.schematic-key {
+  font-size: 12px;
+  color: #06B6D4;
+  letter-spacing: 1.5px;
+}
+.schematic-val {
+  font-size: 22px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+.schematic-status {
+  padding: 8px 16px;
+  background: rgba(6, 182, 212, 0.15);
+  border: 1px solid #06B6D4;
+  border-radius: 8px;
+  color: #22D3EE;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.subtext {
+  font-size: 32px; color: #D1D5DB;
+  line-height: 1.4; margin-bottom: 24px;
+  max-width: 900px;
+}
+.annotation {
+  font-family: 'Caveat', 'Inter', cursive;
+  font-style: italic; font-size: 36px;
+  color: #06B6D4; margin-bottom: 20px;
+  line-height: 1.3;
+  text-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+}
+.bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dots span {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: #374151;
+}
+.dots span.active {
+  background: #06B6D4;
+  width: 34px;
+  border-radius: 6px;
+  box-shadow: 0 0 14px rgba(6, 182, 212, 0.7);
+}
+.arrow {
+  font-size: 40px;
+  color: #FFFFFF;
+  line-height: 1;
+}
+</style>
+</head>
+<body>
+<div class="bg-image"></div>
+<div class="bg-overlay"></div>
+<div class="glow-orb-blue"></div>
+<div class="glow-orb-cyan"></div>
+<div class="corner-tl"></div>
+<div class="corner-tr"></div>
+<div class="corner-bl"></div>
+<div class="corner-br"></div>
+<div class="content">
+  <div class="top-bar">
+    <div class="spec-label">+ + [ SCHEMATIC SPEC ] + +</div>
+    <div class="slide-num">{{ slide_counter|default('01 / 06') }}</div>
+  </div>
+
+  <div class="main-body">
+    <div class="headline">
+      {% if line1 %}
+        {{ line1 }}<br>
+        {% if line2 %}{{ line2 }}<br>{% endif %}
+        {% if line3 %}{{ line3 }}<br>{% endif %}
+        <span class="gradient-text">{{ gradient_word|default(headline_highlight) }}</span>
+        {% if line5 %}<br>{{ line5 }}{% endif %}
+      {% elif headline_prefix and headline_highlight %}
+        {{ headline_prefix }}<br>
+        <span class="gradient-text">{{ headline_highlight }}</span>
+        {% if headline_suffix %}<br>{{ headline_suffix }}{% endif %}
+      {% else %}
+        {{ headline|default('ENGINEERED FOR UNMATCHED') }}<br>
+        <span class="gradient-text">{{ headline_highlight|default('AUTONOMOUS SPEED') }}</span>
+      {% endif %}
+    </div>
+
+    <div class="schematic-box">
+      <div class="schematic-meta">
+        <span class="schematic-key">AGENT ARCHITECTURE</span>
+        <span class="schematic-val">{{ tool_name|default('Engine Runtime Core') }}</span>
+      </div>
+      <div class="schematic-status">STATE: DEPLOYED</div>
+    </div>
+
+    <div class="subtext">{{ subtext|default(body_text)|default('Full technical schematics and step-by-step implementation guide.') }}</div>
+    <div class="annotation">+ {{ annotation|default(annotation_text)|default('Swipe through the complete architecture') }}</div>
+  </div>
+
+  <div class="bottom-row">
+    <div class="dots">
+      <span class="active"></span>
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="arrow">→</div>
+  </div>
+</div>
+</body>
+</html>

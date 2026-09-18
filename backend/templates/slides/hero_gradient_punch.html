@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slide {{ slide_number|default(1) }} - Gradient Punch Hero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  width: 1080px; height: 1350px;
+  background: #000000;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  overflow: hidden;
+  color: #FFFFFF;
+}
+.bg-image {
+  position: absolute; inset: 0;
+  background-image: url('{{ background_image_url }}');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.44;
+}
+.bg-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.72) 45%, rgba(0,0,0,0.92) 100%);
+}
+.glow-orb-sunset {
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.28) 0%, rgba(236, 72, 153, 0.15) 50%, transparent 70%);
+  filter: blur(85px);
+  top: 15%; right: -120px;
+  pointer-events: none;
+}
+.glow-orb-rose {
+  position: absolute;
+  width: 520px; height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(225, 29, 72, 0.25) 0%, rgba(124, 58, 237, 0.12) 50%, transparent 70%);
+  filter: blur(85px);
+  bottom: 20%; left: -100px;
+  pointer-events: none;
+}
+.content {
+  position: relative; z-index: 2;
+  padding: 60px 70px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.fire-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.25), rgba(225, 29, 72, 0.25));
+  border: 1px solid rgba(249, 115, 22, 0.5);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #FB923C;
+  box-shadow: 0 0 25px rgba(249, 115, 22, 0.35);
+}
+.slide-num {
+  font-size: 26px; color: #9CA3AF; font-weight: 500;
+  letter-spacing: 2px;
+}
+.main-body {
+  margin-top: auto;
+  margin-bottom: 36px;
+}
+.headline {
+  font-size: 102px; font-weight: 900;
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  margin-bottom: 30px;
+  letter-spacing: -0.02em;
+}
+.gradient-text {
+  background: linear-gradient(135deg, #FB923C 0%, #F43F5E 50%, #C084FC 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline;
+}
+
+/* Floating Bookmark Highlight */
+.bookmark-card {
+  margin: 30px 0 32px 0;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  border-left: 4px solid #FB923C;
+  border-radius: 18px;
+  padding: 22px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+.bm-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #FB923C;
+  text-transform: uppercase;
+}
+.bm-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-top: 4px;
+}
+.bm-tag {
+  background: linear-gradient(135deg, #FB923C, #F43F5E);
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 8px 16px;
+  border-radius: 10px;
+  letter-spacing: 1px;
+}
+
+.subtext {
+  font-size: 32px; color: #D1D5DB;
+  line-height: 1.4; margin-bottom: 24px;
+  max-width: 900px;
+}
+.annotation {
+  font-family: 'Caveat', 'Inter', cursive;
+  font-style: italic; font-size: 36px;
+  color: #FB923C; margin-bottom: 20px;
+  line-height: 1.3;
+  text-shadow: 0 0 20px rgba(251, 146, 60, 0.4);
+}
+.bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dots span {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: #374151;
+}
+.dots span.active {
+  background: #FB923C;
+  width: 34px;
+  border-radius: 6px;
+  box-shadow: 0 0 14px rgba(251, 146, 60, 0.7);
+}
+.arrow {
+  font-size: 40px;
+  color: #FFFFFF;
+  line-height: 1;
+}
+</style>
+</head>
+<body>
+<div class="bg-image"></div>
+<div class="bg-overlay"></div>
+<div class="glow-orb-sunset"></div>
+<div class="glow-orb-rose"></div>
+<div class="content">
+  <div class="top-bar">
+    <div class="fire-pill">
+      <span>⚡</span>
+      <span>VIRAL AI DISCOVERY</span>
+    </div>
+    <div class="slide-num">{{ slide_counter|default('01 / 06') }}</div>
+  </div>
+
+  <div class="main-body">
+    <div class="headline">
+      {% if line1 %}
+        {{ line1 }}<br>
+        {% if line2 %}{{ line2 }}<br>{% endif %}
+        {% if line3 %}{{ line3 }}<br>{% endif %}
+        <span class="gradient-text">{{ gradient_word|default(headline_highlight) }}</span>
+        {% if line5 %}<br>{{ line5 }}{% endif %}
+      {% elif headline_prefix and headline_highlight %}
+        {{ headline_prefix }}<br>
+        <span class="gradient-text">{{ headline_highlight }}</span>
+        {% if headline_suffix %}<br>{{ headline_suffix }}{% endif %}
+      {% else %}
+        {{ headline|default('THE EASIEST WAY TO BUILD') }}<br>
+        <span class="gradient-text">{{ headline_highlight|default('AUTONOMOUS SOFTWARE') }}</span>
+      {% endif %}
+    </div>
+
+    <div class="bookmark-card">
+      <div>
+        <div class="bm-label">TRENDING BUILDER STACK</div>
+        <div class="bm-title">{{ tool_name|default('Zero-Config AI Platform') }}</div>
+      </div>
+      <div class="bm-tag">SAVE POST</div>
+    </div>
+
+    <div class="subtext">{{ subtext|default(body_text)|default('From idea to deployed database and full-stack app in minutes.') }}</div>
+    <div class="annotation">★ {{ annotation|default(annotation_text)|default('Swipe through the quickstart steps') }}</div>
+  </div>
+
+  <div class="bottom-row">
+    <div class="dots">
+      <span class="active"></span>
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="arrow">→</div>
+  </div>
+</div>
+</body>
+</html>

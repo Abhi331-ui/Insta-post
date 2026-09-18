@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slide {{ slide_number|default(2) }} - Meet The Tool</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  width: 1080px; height: 1350px;
+  background: #000000;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  overflow: hidden;
+  color: #FFFFFF;
+}
+.bg-image {
+  position: absolute; inset: 0;
+  background-image: url('{{ background_image_url }}');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.42;
+}
+.bg-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.72) 50%, rgba(0,0,0,0.90) 100%);
+}
+.glow-orb {
+  position: absolute;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.28) 0%, transparent 70%);
+  filter: blur(75px);
+  top: 35%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.content {
+  position: relative; z-index: 2;
+  padding: 60px 70px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.slide-num {
+  align-self: flex-end;
+  font-size: 26px; color: #9CA3AF; font-weight: 500;
+  letter-spacing: 2px;
+}
+.header-wrap {
+  margin-top: 10px;
+}
+.eyebrow {
+  font-size: 28px; letter-spacing: 8px;
+  color: #9CA3AF; font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.tool-name {
+  font-size: 88px; font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  max-width: 940px;
+  word-wrap: break-word;
+}
+.tool-name .brand { color: #FFFFFF; }
+.tool-name .version {
+  background: linear-gradient(135deg, #A855F7, #3B82F6, #EC4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+.tool-desc {
+  font-size: 32px; color: #D1D5DB;
+  line-height: 1.35; margin-top: 18px;
+  max-width: 900px;
+}
+.center-visual-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 420px;
+}
+.tool-logo-box {
+  width: 400px; height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.tool-logo {
+  max-width: 380px; max-height: 380px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 60px rgba(124,58,237,0.6));
+}
+.tool-fallback-logo {
+  width: 320px; height: 320px;
+  border-radius: 64px;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.35), rgba(37, 99, 235, 0.25));
+  border: 2px solid rgba(168, 85, 247, 0.5);
+  box-shadow: 0 0 60px rgba(124, 58, 237, 0.6), inset 0 0 40px rgba(168, 85, 247, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(20px);
+}
+.tool-fallback-icon {
+  font-size: 96px;
+  margin-bottom: 12px;
+}
+.tool-fallback-text {
+  font-size: 38px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #FFFFFF;
+}
+.annotation {
+  position: absolute;
+  right: 20px;
+  top: 15%;
+  font-family: 'Caveat', 'Inter', cursive;
+  font-style: italic; font-size: 32px;
+  color: #F472B6;
+  text-shadow: 0 0 20px rgba(244, 114, 182, 0.45);
+  transform: rotate(4deg);
+  max-width: 240px;
+  line-height: 1.2;
+}
+.feature-badges {
+  display: flex; gap: 18px;
+  justify-content: space-around;
+  margin-bottom: 36px;
+}
+.badge {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  padding: 24px 16px;
+  text-align: center;
+  flex: 1;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+.badge-icon {
+  font-size: 40px; margin-bottom: 12px;
+  display: block;
+}
+.badge-label {
+  font-size: 26px; color: #D1D5DB; font-weight: 600;
+  line-height: 1.2;
+}
+.bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dots span {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: #4B5563;
+}
+.dots span.active {
+  background: #7C3AED;
+  width: 32px;
+  border-radius: 6px;
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.6);
+}
+.arrow {
+  font-size: 40px;
+  color: #FFFFFF;
+  line-height: 1;
+}
+</style>
+</head>
+<body>
+<div class="bg-image"></div>
+<div class="bg-overlay"></div>
+<div class="glow-orb"></div>
+<div class="content">
+  <div class="slide-num">{{ slide_counter|default('02 / 06') }}</div>
+
+  <div class="header-wrap">
+    <div class="eyebrow">{{ eyebrow|default('M E E T') }}</div>
+    <div class="tool-name">
+      <span class="brand">{{ tool_name_prefix|default('GOOGLE') }}</span>
+      <span class="version">{{ tool_name|default('VEO 3') }}</span>
+    </div>
+    <div class="tool-desc">{{ body_text|default(subtext)|default('The most advanced AI video model yet.') }}</div>
+  </div>
+
+  <div class="center-visual-wrap">
+    <div class="tool-logo-box">
+      {% if asset_slide2_tile and (tool_badge == 'VEO 3' or tool_name == 'VEO 3') %}
+        <img class="tool-logo" src="{{ asset_slide2_tile }}" alt="Tool Logo">
+      {% else %}
+        <div class="tool-fallback-logo">
+          <div class="tool-fallback-icon">✦</div>
+          <div class="tool-fallback-text">{{ tool_badge|default(tool_name)|default('AI TOOL') }}</div>
+        </div>
+      {% endif %}
+    </div>
+    <div class="annotation">
+      {{ annotation|default(annotation_text)|default('Not just videos. Realistic videos.') }} ↗
+    </div>
+  </div>
+
+  <div class="feature-badges">
+    {% if features and features|length > 0 %}
+      {% for f in features[:4] %}
+        <div class="badge">
+          <div class="badge-icon">
+            {% if f.icon and f.icon|length <= 2 %}{{ f.icon }}
+            {% elif f.icon == 'camera' or 'camera' in f.icon %}🎥
+            {% elif f.icon == 'audio' or 'audio' in f.icon %}🎙️
+            {% elif f.icon == 'resolution' or '4k' in f.icon or 'hd' in f.icon %}✨
+            {% elif f.icon == 'style' or 'palette' in f.icon %}🎨
+            {% elif f.icon == 'bolt' or 'speed' in f.icon %}⚡
+            {% else %}{{ f.icon|default('🔮') }}{% endif %}
+          </div>
+          <div class="badge-label">{{ f.label|default(f.title)|default('Feature') }}</div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="badge">
+        <div class="badge-icon">🎥</div>
+        <div class="badge-label">Cinematic quality</div>
+      </div>
+      <div class="badge">
+        <div class="badge-icon">🎙️</div>
+        <div class="badge-label">Native audio & dialogue</div>
+      </div>
+      <div class="badge">
+        <div class="badge-icon">✨</div>
+        <div class="badge-label">High resolution</div>
+      </div>
+      <div class="badge">
+        <div class="badge-icon">🎨</div>
+        <div class="badge-label">Multiple styles</div>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="bottom-row">
+    <div class="dots">
+      <span></span>
+      <span class="active"></span>
+      <span></span><span></span><span></span><span></span>
+    </div>
+    <div class="arrow">→</div>
+  </div>
+</div>
+</body>
+</html>

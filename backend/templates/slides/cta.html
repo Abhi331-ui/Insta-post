@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slide {{ slide_number|default(6) }} - CTA / Closer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  width: 1080px; height: 1350px;
+  background: #000000;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  overflow: hidden;
+  color: #FFFFFF;
+}
+.bg-image {
+  position: absolute; inset: 0;
+  background-image: url('{{ background_image_url }}');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.42;
+}
+.bg-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.72) 50%, rgba(0,0,0,0.90) 100%);
+}
+.glow-orb {
+  position: absolute;
+  width: 550px; height: 550px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.28) 0%, rgba(37, 99, 235, 0.15) 50%, transparent 70%);
+  filter: blur(85px);
+  top: 40%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.content {
+  position: relative; z-index: 2;
+  padding: 60px 70px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.slide-num {
+  align-self: flex-end;
+  font-size: 26px; color: #9CA3AF; font-weight: 500;
+  letter-spacing: 2px;
+}
+.header-wrap {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+.headline {
+  font-size: 96px; font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+.gradient-text {
+  background: linear-gradient(135deg, #A855F7, #3B82F6, #EC4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+.subtext {
+  font-size: 34px; color: #D1D5DB;
+  line-height: 1.4; margin-top: 18px;
+}
+.benefits-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  margin: 10px 0;
+}
+.benefit-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 24px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 16px 24px;
+  backdrop-filter: blur(10px);
+}
+.benefit-icon {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7C3AED, #2563EB);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
+}
+.benefit-text {
+  font-size: 34px; font-weight: 600; color: #FFFFFF;
+}
+.cta-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #5B21B6, #2563EB);
+  border-radius: 100px;
+  padding: 28px 44px;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  width: 100%;
+  box-shadow: 0 10px 35px rgba(91, 33, 182, 0.5), 0 0 50px rgba(37, 99, 235, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.cta-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.cta-icon {
+  font-size: 40px;
+  color: white;
+}
+.cta-text-col {
+  display: flex;
+  flex-direction: column;
+}
+.cta-main-text {
+  font-size: 40px; font-weight: 900; color: white;
+  letter-spacing: -0.01em;
+}
+.cta-sub-text {
+  font-size: 24px; color: rgba(255,255,255,0.75);
+  margin-top: 2px;
+}
+.cta-arrow {
+  width: 64px; height: 64px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.annotation {
+  font-family: 'Caveat', 'Inter', cursive;
+  font-style: italic; font-size: 30px;
+  color: #F472B6;
+  text-shadow: 0 0 15px rgba(244, 114, 182, 0.45);
+  margin-bottom: 12px;
+  text-align: right;
+}
+.bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dots span {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: #4B5563;
+}
+.dots span.active {
+  background: #7C3AED;
+  width: 32px;
+  border-radius: 6px;
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.6);
+}
+.arrow {
+  font-size: 40px;
+  color: #FFFFFF;
+  line-height: 1;
+}
+</style>
+</head>
+<body>
+<div class="bg-image"></div>
+<div class="bg-overlay"></div>
+<div class="glow-orb"></div>
+<div class="content">
+  <div class="slide-num">{{ slide_counter|default('06 / 06') }}</div>
+
+  <div class="header-wrap">
+    <div class="headline">
+      {% if headline_prefix and headline_highlight %}
+        {{ headline_prefix }}<br>
+        <span class="gradient-text">{{ headline_highlight }}</span>
+      {% else %}
+        A NEW ERA FOR<br>
+        <span class="gradient-text">CREATORS</span>
+      {% endif %}
+    </div>
+    <div class="subtext">{{ body_text|default(subtext)|default('Better tools. Bigger ideas. A more creative you.') }}</div>
+  </div>
+
+  <div class="benefits-container">
+    {% if benefits and benefits|length > 0 %}
+      {% for b in benefits[:4] %}
+        <div class="benefit-row">
+          <div class="benefit-icon">
+            {% if b.icon == 'bolt' or 'fast' in b.icon %}⚡
+            {% elif b.icon == 'infinity' or 'scale' in b.icon %}♾️
+            {% elif b.icon == 'users' or 'community' in b.icon %}👥
+            {% elif b.icon == 'rocket' or 'launch' in b.icon %}🚀
+            {% else %}✨{% endif %}
+          </div>
+          <div class="benefit-text">{{ b.text|default(b.title)|default('Creator Advantage') }}</div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="benefit-row">
+        <div class="benefit-icon">⚡</div>
+        <div class="benefit-text">Create faster</div>
+      </div>
+      <div class="benefit-row">
+        <div class="benefit-icon">♾️</div>
+        <div class="benefit-text">More possibilities</div>
+      </div>
+      <div class="benefit-row">
+        <div class="benefit-icon">👥</div>
+        <div class="benefit-text">For everyone</div>
+      </div>
+      <div class="benefit-row">
+        <div class="benefit-icon">🚀</div>
+        <div class="benefit-text">The future is visual</div>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="annotation">
+    {{ annotation|default(annotation_text)|default("Create what doesn't exist yet.") }} ↘
+  </div>
+
+  <div class="cta-button">
+    <div class="cta-left">
+      <div class="cta-icon">📌</div>
+      <div class="cta-text-col">
+        <div class="cta-main-text">{{ cta_title|default('Save this post') }}</div>
+        <div class="cta-sub-text">{{ cta_subtitle|default('And start exploring the future.') }}</div>
+      </div>
+    </div>
+    <div class="cta-arrow">→</div>
+  </div>
+
+  <div class="bottom-row">
+    <div class="dots">
+      <span></span><span></span><span></span><span></span><span></span>
+      <span class="active"></span>
+    </div>
+    <div class="arrow">→</div>
+  </div>
+</div>
+</body>
+</html>
