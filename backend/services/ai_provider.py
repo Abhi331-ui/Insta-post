@@ -156,106 +156,170 @@ class AIProvider:
             topic_match = re.search(r"Topic:\s*([^\n\r]+)", user)
             if topic_match:
                 topic = topic_match.group(1).strip()
-            hook = "THIS AI TURNS YOUR IDEAS INTO STUNNING VIDEOS"
+            hook = "THE AI TOOL YOU'LL WISH YOU KNEW EARLIER"
             hook_match = re.search(r"Hook:\s*([^\n\r]+)", user)
-            if hook_match:
+            if hook_match and hook_match.group(1).strip():
                 hook = hook_match.group(1).strip()
 
-            tool_name = topic
-            tool_prefix = ""
-            if " " in topic:
-                parts = topic.split(" ", 1)
-                tool_prefix = parts[0]
-                tool_name = parts[1]
+            # Extract custom tone
+            tone = "Practical Deep Dive"
+            tone_match = re.search(r"Tone / Style:\s*([^\n\r]+)", user)
+            if tone_match and tone_match.group(1).strip():
+                tone = tone_match.group(1).strip()
+
+            # Extract custom notes
+            notes = ""
+            notes_match = re.search(r"Key Notes / Must-Include Details:\s*([^\n\r]+)", user)
+            if notes_match and notes_match.group(1).strip() and not notes_match.group(1).startswith("None"):
+                notes = notes_match.group(1).strip()
+
+            # Extract custom DM keyword
+            keyword = "VEO"
+            kw_match = re.search(r"Custom Lead Magnet Keyword:\s*([^\n\r]+)", user)
+            if kw_match and kw_match.group(1).strip() and not kw_match.group(1).startswith("Auto-generate"):
+                keyword = kw_match.group(1).strip().upper()
+            else:
+                words = [w for w in topic.split() if not w.isdigit()]
+                keyword = words[-1].upper() if words else "VEO"
+
+            words = [w for w in topic.split() if not w.isdigit()]
+            tool_prefix = words[0] if len(words) > 1 else "The"
+            tool_name = " ".join(words[1:]) if len(words) > 1 else topic
+
+            cat_map = {
+                "Technical Deep Dive": "ENGINEERING DEEP DIVE",
+                "Viral Hype": "BREAKTHROUGH LAUNCH",
+                "Step-by-Step Tutorial": "STEP-BY-STEP GUIDE",
+                "Creator Breakdown": "CREATOR BLUEPRINT",
+            }
+            category_header = cat_map.get(tone, "AI DISCOVERY")
+
+            features = [
+                {"icon": "bolt", "label": "10x Speed & Power"},
+                {"icon": "target", "label": "Hyper-Precise Control"},
+                {"icon": "shield", "label": "Production-Ready Quality"},
+                {"icon": "sparkles", "label": "Instant Iteration"}
+            ]
+            if notes:
+                note_lines = [n.strip() for n in re.split(r"[\n,;•\.-]+", notes) if n.strip() and len(n.strip()) > 3]
+                if len(note_lines) >= 1:
+                    features[0] = {"icon": "bolt", "label": note_lines[0][:26]}
+                if len(note_lines) >= 2:
+                    features[1] = {"icon": "target", "label": note_lines[1][:26]}
+                if len(note_lines) >= 3:
+                    features[2] = {"icon": "shield", "label": note_lines[2][:26]}
+                if len(note_lines) >= 4:
+                    features[3] = {"icon": "sparkles", "label": note_lines[3][:26]}
 
             return json.dumps([
                 {
                     "slide_number": 1,
-                    "headline_prefix": "THIS AI TURNS YOUR IDEAS INTO",
-                    "headline_highlight": "STUNNING VIDEOS",
+                    "category": category_header,
+                    "headline_prefix": "THE AI TOOL\nYOU'LL WISH",
+                    "headline_highlight": "YOU KNEW EARLIER",
                     "headline": hook,
-                    "body_text": "Just a text prompt. No camera. No editing. Pure imagination.",
-                    "annotation": "From thoughts to visuals. In minutes.",
-                    "prompt_preview": "A cinematic scene of a lone traveler on a mountain, looking at a futuristic city...",
+                    "body_text": f"A new way to turn ideas into reality with {topic}.",
+                    "annotation": "Same Prompt Infinite Possibilities",
+                    "feature_pills": [
+                        {"icon": "⚡", "title": "IDEA", "desc": "Just a prompt"},
+                        {"icon": "✦", "title": "CREATE", "desc": "In seconds"},
+                        {"icon": "ılı", "title": "ITERATE", "desc": "Make it better"},
+                        {"icon": "↗", "title": "SHARE", "desc": "Bring it to life"}
+                    ],
+                    "prompt_preview": f"Describe what you want to create with {topic}...",
+                    "cta_button_text": "DISCOVER WHAT'S NEXT",
+                    "tagline_right": "BETTER TOOLS<br>BRIGHTER IDEAS<br>A MORE CREATIVE YOU",
                     "layout_type": "hero"
                 },
                 {
                     "slide_number": 2,
+                    "category": "DEEP DIVE",
                     "eyebrow": "M E E T",
-                    "tool_name_prefix": tool_prefix or "Google",
-                    "tool_name": tool_name or "Veo 3",
-                    "tool_badge": tool_name or "Veo 3",
+                    "tool_name_prefix": tool_prefix,
+                    "tool_name": tool_name,
+                    "tool_badge": "Breakthrough",
                     "headline": f"Meet {topic}",
-                    "body_text": "The most advanced AI video model yet.",
-                    "annotation": "Not just videos. Realistic videos.",
-                    "features": [
-                        {"icon": "camera", "label": "Cinematic quality"},
-                        {"icon": "audio", "label": "Native audio & dialogue"},
-                        {"icon": "resolution", "label": "High resolution"},
-                        {"icon": "style", "label": "Multiple styles"}
-                    ],
+                    "body_text": f"The most advanced system yet to turn imagination into reality.",
+                    "annotation": "Not just fast. Superhuman.",
+                    "features": features,
+                    "cta_button_text": "EXPLORE POSSIBILITIES",
+                    "tagline_left": "FUTURE READY.<br>BUILT FOR SPEED.",
                     "layout_type": "tool_card"
                 },
                 {
                     "slide_number": 3,
-                    "headline_prefix": "WHAT CAN YOU",
-                    "headline_highlight": "CREATE?",
-                    "headline": "WHAT CAN YOU CREATE?",
-                    "body_text": "From imagination to reality — here are some examples.",
-                    "annotation": "Same tool. Endless possibilities.",
-                    "showcase_items": [
-                        {"title": "Cinematic scenes", "tag": "4K Ultra-Real"},
-                        {"title": "Animated stories", "tag": "Anime & 3D"},
-                        {"title": "Product videos", "tag": "Commercial CGI"},
-                        {"title": "Nature & travel visuals", "tag": "Cinematic 8K"}
+                    "category": "REAL POSSIBILITIES",
+                    "headline_prefix": "ONE PROMPT.",
+                    "headline_highlight": "ENDLESS POSSIBILITIES.",
+                    "headline": "ONE PROMPT. ENDLESS POSSIBILITIES.",
+                    "body_text": f"From ideas to stunning results — here's what you can create with {topic}.",
+                    "annotation": "Same tool. Different worlds.",
+                    "grid_cards": [
+                        {"tag": "CINEMATIC", "title": "Epic Landscapes", "prompt": '"A cinematic drone shot over a futuristic city at sunset..."'},
+                        {"tag": "CHARACTERS", "title": "Lifelike People", "prompt": '"A close-up of a traveler in a neon-lit Tokyo street, cinematic style..."'},
+                        {"tag": "PRODUCTS", "title": "Stunning Ads", "prompt": '"A cinematic product ad for a sleek coffee machine, with steam and dramatic lighting..."'},
+                        {"tag": "ANIMATION", "title": "Animated Worlds", "prompt": '"A cozy animated short of a little robot exploring a magical forest at night..."'}
                     ],
+                    "flow_steps": ["TEXT", "VIDEO", "REALITY"],
+                    "cta_button_text": "WHAT WILL YOU CREATE?",
+                    "tagline_left": "BIGGER IDEAS.<br>BRIGHTER REALITIES.",
                     "layout_type": "showcase"
                 },
                 {
                     "slide_number": 4,
-                    "headline_prefix": "HOW IT",
-                    "headline_highlight": "WORKS",
-                    "headline": "HOW IT WORKS",
-                    "body_text": "Turn your idea into a video in 4 simple steps.",
-                    "annotation": "Ideas -> Videos That Simple.",
+                    "category": "HOW IT WORKS",
+                    "headline_prefix": "FROM PROMPT",
+                    "headline_highlight": "TO MASTERPIECE.",
+                    "headline": "FROM PROMPT TO MASTERPIECE.",
+                    "body_text": "Create stunning results in just a few simple steps.",
+                    "annotation": "Simple steps. Incredible results.",
                     "steps": [
-                        {"title": "Enter your prompt", "desc": "Describe what you want to see."},
-                        {"title": f"{tool_name or 'Veo 3'} generates", "desc": "AI creates the video with audio."},
-                        {"title": "Customize", "desc": "Adjust style, length or details."},
-                        {"title": "Download & share", "desc": "Use it for personal or commercial projects (follow usage policy)."}
+                        {"title": "Write Your Prompt", "desc": f"Describe what you want to create with {topic} in simple text.", "example": 'e.g. "A serene mountain lake at sunset, cinematic style"'},
+                        {"title": "Customize (Optional)", "desc": "Choose style, parameters, and fine-tuned settings."},
+                        {"title": "Generate", "desc": f"Let {topic} do the magic. It creates high-quality output."},
+                        {"title": "Download & Share", "desc": "Preview, download and share your masterpiece."}
                     ],
+                    "mockup_prompt": f"A peaceful workspace utilizing {topic} for high productivity",
+                    "cta_button_text": "NEXT: SEE REAL EXAMPLES",
+                    "tagline_left": "SAME IDEA.<br>A BIGGER WORLD.",
                     "layout_type": "steps"
                 },
                 {
                     "slide_number": 5,
-                    "headline_prefix": "REAL",
-                    "headline_highlight": "EXAMPLES",
-                    "headline": "REAL EXAMPLES",
-                    "body_text": "Same prompt. Different worlds.",
-                    "annotation": "Text in. This out.",
-                    "examples": [
-                        {"prompt": "A futuristic city at sunset with flying cars", "tag": "Futuristic City"},
-                        {"prompt": "A close up of a lion in the wild", "tag": "Wildlife 4K"},
-                        {"prompt": "A cozy room during rain, with a cat", "tag": "Cozy Interior"}
+                    "category": "REAL EXAMPLES",
+                    "headline_prefix": "SAME PROMPT.",
+                    "headline_highlight": "INCREDIBLE RESULTS.",
+                    "headline": "SAME PROMPT. INCREDIBLE RESULTS.",
+                    "body_text": f"Real prompts. Real results. Made with {topic}.",
+                    "annotation": "Just a prompt. Look at the result.",
+                    "rows": [
+                        {"number": "01", "tag": "CINEMATIC", "tag_desc": "Futuristic worlds", "prompt": '"A cinematic drone shot over a futuristic city at sunrise, with flying cars and low clouds, ultra realistic, 8k."', "duration": "0:08"},
+                        {"number": "02", "tag": "CHARACTERS", "tag_desc": "Bring stories to life", "prompt": '"A close-up of a traveler in a spacesuit standing on an alien planet, looking at a giant ringed planet in the sky, cinematic lighting, ultra realistic."', "duration": "0:08"},
+                        {"number": "03", "tag": "ANIMATION", "tag_desc": "Animated worlds", "prompt": '"A cozy animated short of a little robot sitting in a forest, with glowing fireflies, Pixar style, warm lighting."', "duration": "0:08"},
+                        {"number": "04", "tag": "PRODUCTS", "tag_desc": "Stunning product ads", "prompt": '"A close-up product shot of a premium sneaker, rotating slowly, with dramatic studio lighting, black background, cinematic style."', "duration": "0:08"}
                     ],
-                    "quote": "It literally feels like bringing your imagination to life.",
+                    "cta_button_text": "NEXT: A NEW ERA FOR CREATORS",
+                    "tagline_left": "IDEAS TO VIDEOS.<br>FASTER THAN EVER.",
                     "layout_type": "comparison"
                 },
                 {
                     "slide_number": 6,
-                    "headline_prefix": "A NEW ERA FOR",
-                    "headline_highlight": "CREATORS",
-                    "headline": "A NEW ERA FOR CREATORS",
-                    "body_text": "Better tools. Bigger ideas. A more creative you.",
-                    "annotation": "Create what doesn't exist yet.",
+                    "category": "A NEW ERA",
+                    "headline_prefix": "WANT THE FULL",
+                    "headline_highlight": "RESOURCE PACK?",
+                    "headline": "WANT THE FULL RESOURCE PACK?",
+                    "body_text": f"I put together the complete free checklist, prompts & templates for {topic}.",
+                    "annotation": "Free for the community.",
                     "benefits": [
-                        {"icon": "bolt", "text": "Create faster"},
-                        {"icon": "infinity", "text": "More possibilities"},
-                        {"icon": "users", "text": "For everyone"},
-                        {"icon": "rocket", "text": "The future is visual"}
+                        {"icon": "⚡", "text": "Instant Actionable Prompts"},
+                        {"icon": "∞", "text": "Save 10+ Hours of Trial & Error"},
+                        {"icon": "👥", "text": "Tested by Top Creators"},
+                        {"icon": "🚀", "text": "Immediate Real Results"}
                     ],
-                    "cta_title": "Save this post",
-                    "cta_subtitle": "And start exploring the future.",
+                    "dm_keyword": keyword,
+                    "dm_message": f"Hey! Here is your free {topic} resource pack: https://promptpulse.ai/toolkit - enjoy!",
+                    "cta_button_text": f'COMMENT "{keyword}" TO GET IT',
+                    "tagline_left": "BETTER TOOLS.<br>BRIGHTER IDEAS.",
                     "layout_type": "cta"
                 }
             ])

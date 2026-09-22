@@ -139,6 +139,12 @@ class DailyPipeline:
         self,
         user_id: int,
         custom_topic: Optional[str] = None,
+        custom_pillar: Optional[str] = None,
+        custom_audience: Optional[List[str]] = None,
+        custom_notes: Optional[str] = None,
+        custom_hook: Optional[str] = None,
+        custom_tone: Optional[str] = None,
+        custom_dm_keyword: Optional[str] = None,
         db: Optional[Session] = None,
     ) -> Dict[str, Any]:
         """
@@ -161,50 +167,122 @@ class DailyPipeline:
         db.commit()
 
         try:
-            # 1. RESEARCH
-            update_pipeline_progress(1, "Research", "Scanning verified web sources for breaking AI developments...")
-            raw_topics = await self.research_agent.research(custom_query=custom_topic)
-            agent_run.topics_researched = len(raw_topics)
-            db.commit()
+            if custom_topic:
+                # 1. CUSTOM TOPIC DIRECT FLOW: User explicitly requested this topic (via manual post or batch queue)
+                update_pipeline_progress(1, "Topic Setup", f"Configuring strategic angle and hooks for custom topic: '{custom_topic}'...")
+                agent_run.topics_researched = 1
 
-            # 2. SCORE & FILTER
-            update_pipeline_progress(2, "Trend Evaluation", f"Scoring {len(raw_topics)} candidate topics across 7 viability criteria...")
-            scored_candidates = await self.trend_agent.score_topics(raw_topics)
-            valid_candidates = [t for t in scored_candidates if t.get("composite_score", 0) >= 6.0]
-
-            # 3. SELECT OPPORTUNITY & ANTI-REPETITION
-            update_pipeline_progress(3, "Strategy & Selection", "Executing anti-repetition audit against previous 30 posts...")
-            previous_posts = (
-                db.query(Post)
-                .filter(Post.user_id == user_id)
-                .order_by(Post.created_at.desc())
-                .limit(30)
-                .all()
-            )
-            prev_post_dicts = [
-                {
-                    "topic": p.topic,
-                    "created_at": p.created_at,
-                    "content_pillar": p.content_pillar,
+                custom_candidate = {
+                    "title": custom_topic,
+                    "summary": custom_notes or f"Practical breakdown, key features, and high-utility workflows for {custom_topic}.",
+                    "source_url": "https://promptpulse.ai",
+                    "source_name": "PromptPulse Discovery",
+                    "category": "workflow",
+                    "content_pillar": custom_pillar or "AI Workflows & Automation",
+                    "target_audience": custom_audience or ["creators", "founders", "AI power-users"],
+                    "freshness": "BRAND_NEW",
+                    "notes": custom_notes or "",
+                    "hook": custom_hook or "",
+                    "tone": custom_tone or "Practical Deep Dive",
+                    "dm_keyword": custom_dm_keyword or "",
+                    "composite_score": 9.0,
+                    "scores": {
+                        "freshness": 9.0,
+                        "usefulness": 9.0,
+                        "curiosity": 8.5,
+                        "save_potential": 9.0,
+                        "share_potential": 8.5,
+                        "visual_potential": 8.5,
+                        "audience_relevance": 9.0,
+                    },
                 }
-                for p in previous_posts
-            ]
 
-            opportunity = await self.strategy_agent.select_opportunity(valid_candidates, prev_post_dicts)
-
-            # 4. IF NO STRONG OPPORTUNITY FOUND TODAY
-            if not opportunity:
-                update_pipeline_progress(3, "Strategy & Selection", "No breaking candidate passed threshold. Checking high-utility evergreen...")
-                opportunity = await self.strategy_agent.find_evergreen_with_fresh_angle(user_id)
-
-            if not opportunity:
-                msg = "DISCOVERY PRINCIPLE TRIGGERED: Nothing strong enough to post today. Continuing research."
-                update_pipeline_progress(3, "Strategy & Selection", msg, status="no_opportunity")
-                agent_run.status = "no_opportunity"
-                agent_run.completed_at = datetime.utcnow()
-                agent_run.rejection_reasons = ["All candidates scored below 6.0 or failed anti-repetition checks."]
+                brand_pre = db.query(BrandSetting).filter(BrandSetting.user_id == user_id).first()
+                opportunity = await self.strategy_agent.select_opportunity(
+                    [custom_candidate],
+                    [],
+                    content_strategy=brand_pre.content_strategy if brand_pre else None
+                )
+                if not opportunity:
+                    # Direct structured fallback for custom topic
+                    opportunity = {
+                        "topic": custom_topic,
+                        "why_today": f"Latest breakthrough and essential workflows for {custom_topic}.",
+                        "freshness": "BRAND_NEW",
+                        "selected_angle": custom_tone or f"How to master {custom_topic} in simple steps",
+                        "hook": custom_hook or f"Stop doing this manually. {custom_topic} changes everything.",
+                        "target_audience": custom_audience or ["creators", "founders", "AI power-users"],
+                        "content_pillar": custom_pillar or "AI Workflows & Automation",
+                        "notes": custom_notes or "",
+                        "tone": custom_tone or "Practical Deep Dive",
+                        "dm_keyword": custom_dm_keyword or "",
+                        "sources": ["https://promptpulse.ai"],
+                        "composite_score": 9.0,
+                        "scores": custom_candidate["scores"],
+                    }
+                else:
+                    if custom_pillar:
+                        opportunity["content_pillar"] = custom_pillar
+                    if custom_audience:
+                        opportunity["target_audience"] = custom_audience
+                    if custom_notes:
+                        opportunity["notes"] = custom_notes
+                    if custom_hook:
+                        opportunity["hook"] = custom_hook
+                    if custom_tone:
+                        opportunity["tone"] = custom_tone
+                    if custom_dm_keyword:
+                        opportunity["dm_keyword"] = custom_dm_keyword
+            else:
+                # 1. RESEARCH
+                update_pipeline_progress(1, "Research", "Scanning verified web sources for breaking AI developments...")
+                raw_topics = await self.research_agent.research()
+                agent_run.topics_researched = len(raw_topics)
                 db.commit()
-                return {"status": "no_opportunity", "message": msg}
+
+                # 2. SCORE & FILTER
+                update_pipeline_progress(2, "Trend Evaluation", f"Scoring {len(raw_topics)} candidate topics across 7 viability criteria...")
+                scored_candidates = await self.trend_agent.score_topics(raw_topics)
+                valid_candidates = [t for t in scored_candidates if t.get("composite_score", 0) >= 6.0]
+
+                # 3. SELECT OPPORTUNITY & ANTI-REPETITION
+                update_pipeline_progress(3, "Strategy & Selection", "Executing anti-repetition audit against previous 30 posts...")
+                previous_posts = (
+                    db.query(Post)
+                    .filter(Post.user_id == user_id)
+                    .order_by(Post.created_at.desc())
+                    .limit(30)
+                    .all()
+                )
+                prev_post_dicts = [
+                    {
+                        "topic": p.topic,
+                        "created_at": p.created_at,
+                        "content_pillar": p.content_pillar,
+                    }
+                    for p in previous_posts
+                ]
+
+                brand_pre = db.query(BrandSetting).filter(BrandSetting.user_id == user_id).first()
+                opportunity = await self.strategy_agent.select_opportunity(
+                    valid_candidates,
+                    prev_post_dicts,
+                    content_strategy=brand_pre.content_strategy if brand_pre else None
+                )
+
+                # 4. IF NO STRONG OPPORTUNITY FOUND TODAY
+                if not opportunity:
+                    update_pipeline_progress(3, "Strategy & Selection", "No breaking candidate passed threshold. Checking high-utility evergreen...")
+                    opportunity = await self.strategy_agent.find_evergreen_with_fresh_angle(user_id)
+
+                if not opportunity:
+                    msg = "DISCOVERY PRINCIPLE TRIGGERED: Nothing strong enough to post today. Continuing research."
+                    update_pipeline_progress(3, "Strategy & Selection", msg, status="no_opportunity")
+                    agent_run.status = "no_opportunity"
+                    agent_run.completed_at = datetime.utcnow()
+                    agent_run.rejection_reasons = ["All candidates scored below 6.0 or failed anti-repetition checks."]
+                    db.commit()
+                    return {"status": "no_opportunity", "message": msg}
 
             agent_run.topic_selected = opportunity.get("topic")
             agent_run.rejection_reasons = opportunity.get("rejection_log", [])
@@ -237,6 +315,12 @@ class DailyPipeline:
                 slides_content = fact_result.get("updated_slides", slides_content)
 
             # 8. CREATE POST RECORD IN DB
+            slide_6 = slides_content[5] if len(slides_content) >= 6 else {}
+            extracted_keyword = slide_6.get("dm_keyword") or "GUIDE"
+            extracted_dm_message = slide_6.get("dm_message") or f"Hey! Here is your free {opportunity.get('topic')} resource pack: https://promptpulse.ai/toolkit - enjoy!"
+            import secrets
+            generated_share_token = secrets.token_urlsafe(16)
+
             post = Post(
                 user_id=user_id,
                 topic=opportunity.get("topic", "AI Discovery"),
@@ -249,6 +333,9 @@ class DailyPipeline:
                 caption=caption,
                 hashtags=hashtags,
                 alt_text=alt_text,
+                dm_keyword=extracted_keyword,
+                dm_message=extracted_dm_message,
+                share_token=generated_share_token,
                 status="generating",
                 sources=opportunity.get("sources", []),
                 scores=opportunity.get("scores", {}),
@@ -257,14 +344,24 @@ class DailyPipeline:
             db.add(post)
             db.flush()
 
-            # Assign distinct, anti-repetition hero variant for Slide 1
-            chosen_hero = select_hero_variant_for_post(
-                db=db,
-                user_id=user_id,
-                post_id=post.id,
-                topic=post.topic,
-                content_pillar=post.content_pillar,
-            )
+            # Trigger everyday incremental learning
+            try:
+                from backend.agents.learning_agent import learning_agent
+                await learning_agent.learn_from_post_event(user_id, post.id, "created", None, db)
+            except Exception as _learn_err:
+                logger.warning(f"Could not update learning agent: {_learn_err}")
+
+            # Assign distinct hero variant for Slide 1 (use hero_editorial for custom topics)
+            if custom_topic:
+                chosen_hero = "hero_editorial"
+            else:
+                chosen_hero = select_hero_variant_for_post(
+                    db=db,
+                    user_id=user_id,
+                    post_id=post.id,
+                    topic=post.topic,
+                    content_pillar=post.content_pillar,
+                )
             if slides_content and len(slides_content) > 0:
                 slides_content[0]["layout_type"] = chosen_hero
                 slides_content[0]["html_template"] = f"{chosen_hero}.html"
@@ -326,9 +423,11 @@ class DailyPipeline:
                             db_slide.regenerated_count += 1
                 db.commit()
 
-            # Local renders are only needed during QA; Supabase is the durable source.
-            for image_path in slide_images:
-                Path(image_path).unlink(missing_ok=True)
+            # Only remove local temporary files if they were successfully uploaded to remote storage (e.g. Supabase)
+            for idx, image_path in enumerate(slide_images):
+                pub_url = image_generator.get_public_url(post_id=post.id, slide_number=idx + 1)
+                if pub_url and pub_url.startswith(("http://", "https://")) and "localhost" not in pub_url and "127.0.0.1" not in pub_url:
+                    Path(image_path).unlink(missing_ok=True)
 
             # 11. APPROVAL OR AUTO PUBLISH
             auto_mode = brand.auto_mode_enabled if brand else False
@@ -358,10 +457,17 @@ class DailyPipeline:
 
         except Exception as e:
             logger.exception(f"Pipeline failure: {e}")
-            agent_run.status = "failed"
-            agent_run.error_message = str(e)
-            agent_run.completed_at = datetime.utcnow()
-            db.commit()
+            try:
+                db.rollback()
+            except Exception:
+                pass
+            try:
+                agent_run.status = "failed"
+                agent_run.error_message = str(e)
+                agent_run.completed_at = datetime.utcnow()
+                db.commit()
+            except Exception:
+                pass
             update_pipeline_progress(0, "Error", f"Pipeline encountered error: {str(e)}", status="failed")
             return {"status": "error", "error": str(e)}
 
@@ -433,7 +539,8 @@ class DailyPipeline:
         ) or new_img
         slide.regenerated_count += 1
         db.commit()
-        Path(new_img).unlink(missing_ok=True)
+        if slide.image_path.startswith(("http://", "https://")) and "localhost" not in slide.image_path and "127.0.0.1" not in slide.image_path:
+            Path(new_img).unlink(missing_ok=True)
 
         return {
             "success": True,

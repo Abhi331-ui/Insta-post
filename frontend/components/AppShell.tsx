@@ -9,7 +9,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    const protectedPaths = ["/dashboard", "/posts", "/queue", "/calendar", "/analytics", "/settings"];
+    const protectedPaths = ["/dashboard", "/posts", "/queue", "/calendar", "/analytics", "/settings", "/inbox"];
     const token = localStorage.getItem("access_token");
     const isProtected = protectedPaths.includes(pathname);
 
@@ -23,7 +23,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     }
   }, [pathname, router]);
 
-  const showNav = pathname !== "/login";
+  const showNav = pathname !== "/login" && !pathname.startsWith("/review/");
 
   return (
     <>

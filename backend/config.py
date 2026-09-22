@@ -42,6 +42,10 @@ class Settings:
     INSTAGRAM_USER_ID: str = os.getenv("INSTAGRAM_USER_ID", "")
     INSTAGRAM_ACCESS_TOKEN: str = os.getenv("INSTAGRAM_ACCESS_TOKEN", "")
 
+    # Telegram Bot
+    TELEGRAM_BOT_TOKEN: str = os.getenv("TELEGRAM_BOT_TOKEN", "")
+    TELEGRAM_BOT_USERNAME: str = os.getenv("TELEGRAM_BOT_USERNAME", "")
+
     # Storage
     STORAGE_TYPE: str = os.getenv("STORAGE_TYPE", "supabase")
     SUPABASE_URL: str = os.getenv("SUPABASE_URL", "")

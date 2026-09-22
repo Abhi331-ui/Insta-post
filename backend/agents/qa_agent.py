@@ -78,8 +78,15 @@ class QAAgent:
         # 5. Slide 6 CTA Check
         if len(slides_content) >= 6:
             s6 = slides_content[5]
-            s6_text = (s6.get("headline", "") + " " + s6.get("body_text", "")).lower()
-            if not any(k in s6_text for k in ["save", "follow", "share", "promptpulse"]):
+            s6_text = (
+                s6.get("headline", "") + " " +
+                s6.get("body_text", "") + " " +
+                s6.get("cta_title", "") + " " +
+                s6.get("cta_subtitle", "") + " " +
+                s6.get("headline_prefix", "") + " " +
+                s6.get("headline_highlight", "")
+            ).lower()
+            if not any(k in s6_text for k in ["save", "follow", "share", "promptpulse", "bookmark", "explore"]):
                 critical_failures.append("Slide 6 does not contain a clear call to action (Save/Follow/Share).")
                 failed_slide_indices.append(6)
 

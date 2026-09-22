@@ -15,6 +15,7 @@ from backend.api.settings import router as settings_router
 from backend.api.agent import router as agent_router
 from backend.api.queue import router as queue_router
 from backend.api.notifications import router as notifications_router
+from backend.api.interactions import router as interactions_router
 
 
 @asynccontextmanager
@@ -62,6 +63,7 @@ app.include_router(settings_router)
 app.include_router(agent_router)
 app.include_router(queue_router)
 app.include_router(notifications_router)
+app.include_router(interactions_router)
 
 
 @app.get("/health")

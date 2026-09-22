@@ -29,6 +29,8 @@ class InstagramAccount(Base):
     access_token = Column(String(500), nullable=True)
     token_expires_at = Column(DateTime, nullable=True)
     page_name = Column(String(255), nullable=True)
+    username = Column(String(100), nullable=True)
+    profile_picture_url = Column(String(500), nullable=True)
     connected_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="instagram_account")
@@ -52,13 +54,19 @@ class BrandSetting(Base):
     niche = Column(String(100), default="AI Tools & Productivity")
 
     # Schedule & Automation
-    posting_time = Column(String(10), default="09:00")  # HH:MM format
+    posting_time = Column(String(10), default="09:00")  # HH:MM format (legacy, synced with posting_times[0])
+    posting_times = Column(JSON, default=lambda: ["09:00"])  # list of HH:MM strings, one per posting slot
     timezone = Column(String(50), default="UTC")
     active_days = Column(JSON, default=lambda: ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"])
     posts_per_day = Column(Integer, default=1)
     ai_provider = Column(String(20), default="gemini")
     auto_mode_enabled = Column(Boolean, default=False)
-    webhook_url = Column(String(500), nullable=True)  # Discord, Slack, or Telegram webhook for daily reminders
+    webhook_url = Column(String(500), nullable=True)  # Discord, Slack, or generic webhook
+
+    # Telegram Integration
+    telegram_bot_token = Column(String(200), nullable=True)  # Optional per-user bot token override
+    telegram_chat_id = Column(String(100), nullable=True)     # User's chat ID
+    telegram_connected = Column(Boolean, default=False)        # Verified connection flag
 
     # Learned strategy recommendations from Learning Agent
     content_strategy = Column(JSON, default=dict)

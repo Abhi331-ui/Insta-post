@@ -105,11 +105,12 @@ export default function WhyThisPost({ post }: WhyThisPostProps) {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
             {Object.entries(scores).map(([key, val]) => {
-              if (key === "composite_score") return null;
+              if (key === "composite_score" || key === "scoring_notes" || (typeof val !== "number" && isNaN(Number(val)))) return null;
+              const numericVal = typeof val === "number" ? val : Number(val);
               return (
                 <div key={key} className="bg-slate-900/50 border border-slate-800/80 rounded-lg p-2.5">
                   <div className="text-[11px] text-slate-400 capitalize">{key.replace("_", " ")}</div>
-                  <div className="text-sm font-bold text-slate-200 mt-0.5">{val} / 10</div>
+                  <div className="text-sm font-bold text-slate-200 mt-0.5">{numericVal} / 10</div>
                 </div>
               );
             })}

@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Slide {{ slide_number|default(6) }} - CTA / Closer</title>
+<title>Slide {{ slide_number|default(6) }} - A New Era / CTA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   width: 1080px; height: 1350px;
-  background: #000000;
+  background: #020617;
   font-family: 'Inter', sans-serif;
   position: relative;
   overflow: hidden;
@@ -20,162 +20,255 @@ body {
   position: absolute; inset: 0;
   background-image: url('{{ background_image_url }}');
   background-size: cover;
-  background-position: center;
-  opacity: 0.42;
+  background-position: center bottom;
+  opacity: 0.38;
 }
 .bg-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.72) 50%, rgba(0,0,0,0.90) 100%);
+  background: radial-gradient(circle at 50% 40%, rgba(30, 27, 75, 0.4) 0%, rgba(2, 6, 23, 0.85) 60%, #020617 100%),
+              linear-gradient(180deg, rgba(2, 6, 23, 0.25) 0%, rgba(2, 6, 23, 0.85) 75%, #020617 100%);
 }
 .glow-orb {
   position: absolute;
-  width: 550px; height: 550px;
+  width: 650px; height: 650px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(124, 58, 237, 0.28) 0%, rgba(37, 99, 235, 0.15) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, rgba(37, 99, 235, 0.15) 50%, transparent 70%);
+  filter: blur(95px);
+  top: 30%; right: -80px;
+  pointer-events: none;
+}
+.glow-orb-cyan {
+  position: absolute;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.18) 0%, transparent 65%);
   filter: blur(85px);
-  top: 40%; left: 50%;
-  transform: translate(-50%, -50%);
+  bottom: 15%; left: -80px;
   pointer-events: none;
 }
 .content {
   position: relative; z-index: 2;
-  padding: 60px 70px;
+  padding: 55px 65px;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
+
+/* Top Header Bar */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.category-tag {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #38BDF8;
+  text-transform: uppercase;
+}
+.category-tag span {
+  color: #C084FC;
+  margin: 0 8px;
+}
 .slide-num {
-  align-self: flex-end;
-  font-size: 26px; color: #9CA3AF; font-weight: 500;
+  font-size: 26px;
+  color: #94A3B8;
+  font-weight: 600;
   letter-spacing: 2px;
 }
+
+/* Handwritten Callout */
+.handwritten-callout {
+  position: absolute;
+  top: 92px;
+  right: 65px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  z-index: 5;
+  pointer-events: none;
+}
+.handwritten-text {
+  font-family: 'Caveat', cursive;
+  font-size: 34px;
+  color: #F472B6;
+  line-height: 1.1;
+  text-align: right;
+  text-shadow: 0 0 15px rgba(244, 114, 182, 0.5);
+  transform: rotate(-3deg);
+}
+.handwritten-arrow {
+  width: 48px;
+  height: 52px;
+  margin-top: 4px;
+  margin-right: 18px;
+  filter: drop-shadow(0 0 8px rgba(244, 114, 182, 0.6));
+}
+
+/* Headline Section */
 .header-wrap {
-  margin-top: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 28px;
+  max-width: 820px;
 }
 .headline {
-  font-size: 96px; font-weight: 900;
+  font-size: 92px;
+  font-weight: 900;
   line-height: 0.95;
   letter-spacing: -0.02em;
   text-transform: uppercase;
+  color: #FFFFFF;
 }
 .gradient-text {
-  background: linear-gradient(135deg, #A855F7, #3B82F6, #EC4899);
+  background: linear-gradient(135deg, #38BDF8 0%, #818CF8 50%, #E879F9 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  display: inline-block;
+  display: inline;
 }
 .subtext {
-  font-size: 34px; color: #D1D5DB;
-  line-height: 1.4; margin-top: 18px;
+  font-size: 30px;
+  color: #CBD5E1;
+  line-height: 1.35;
+  margin-top: 18px;
+  font-weight: 400;
 }
-.benefits-container {
+
+/* Lead Magnet Card */
+.lead-pack-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1.5px solid rgba(129, 140, 248, 0.35);
+  border-radius: 28px;
+  padding: 32px 36px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), 0 0 35px rgba(99, 102, 241, 0.2);
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  flex: 1;
-  margin: 10px 0;
-}
-.benefit-row {
-  display: flex;
-  align-items: center;
   gap: 24px;
+  flex: 1;
   margin-bottom: 24px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 16px 24px;
-  backdrop-filter: blur(10px);
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
-.benefit-icon {
-  width: 64px; height: 64px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #7C3AED, #2563EB);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 28px;
-  flex-shrink: 0;
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
+.lead-pack-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, #818CF8, transparent);
 }
-.benefit-text {
-  font-size: 34px; font-weight: 600; color: #FFFFFF;
-}
-.cta-button {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(135deg, #5B21B6, #2563EB);
-  border-radius: 100px;
-  padding: 28px 44px;
-  margin-top: 20px;
-  margin-bottom: 30px;
-  width: 100%;
-  box-shadow: 0 10px 35px rgba(91, 33, 182, 0.5), 0 0 50px rgba(37, 99, 235, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-.cta-left {
-  display: flex;
-  align-items: center;
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
-.cta-icon {
-  font-size: 40px;
-  color: white;
-}
-.cta-text-col {
+.benefit-item {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 16px 20px;
 }
-.cta-main-text {
-  font-size: 40px; font-weight: 900; color: white;
-  letter-spacing: -0.01em;
+.benefit-icon-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(37, 99, 235, 0.3));
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #FFFFFF;
+  flex-shrink: 0;
+  box-shadow: 0 0 16px rgba(124, 58, 237, 0.4);
 }
-.cta-sub-text {
-  font-size: 24px; color: rgba(255,255,255,0.75);
-  margin-top: 2px;
+.benefit-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.25;
 }
-.cta-arrow {
-  width: 64px; height: 64px;
-  background: rgba(255,255,255,0.2);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 32px; color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-.annotation {
-  font-family: 'Caveat', 'Inter', cursive;
-  font-style: italic; font-size: 30px;
-  color: #F472B6;
-  text-shadow: 0 0 15px rgba(244, 114, 182, 0.45);
-  margin-bottom: 12px;
-  text-align: right;
-}
-.bottom-row {
+
+/* Comment-to-DM Banner Box */
+.comment-dm-box {
+  background: rgba(30, 27, 75, 0.55);
+  border: 1.5px solid rgba(168, 85, 247, 0.4);
+  border-radius: 20px;
+  padding: 20px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-shadow: inset 0 0 20px rgba(168, 85, 247, 0.15);
 }
-.dots {
+.dm-callout-text {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  gap: 4px;
 }
-.dots span {
-  display: inline-block;
-  width: 12px; height: 12px;
-  border-radius: 50%;
-  background: #4B5563;
+.dm-callout-label {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  color: #38BDF8;
+  text-transform: uppercase;
 }
-.dots span.active {
-  background: #7C3AED;
-  width: 32px;
-  border-radius: 6px;
-  box-shadow: 0 0 12px rgba(124, 58, 237, 0.6);
+.dm-callout-sub {
+  font-size: 20px;
+  font-weight: 600;
+  color: #E2E8F0;
 }
-.arrow {
-  font-size: 40px;
+.keyword-badge {
+  background: linear-gradient(135deg, #7C3AED, #2563EB);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 12px 24px;
+  border-radius: 14px;
+  font-size: 24px;
+  font-weight: 900;
   color: #FFFFFF;
-  line-height: 1;
+  letter-spacing: 3px;
+  box-shadow: 0 0 25px rgba(124, 58, 237, 0.6);
+}
+
+/* Bottom Row */
+.bottom-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-top: 10px;
+}
+.footer-tagline {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: #94A3B8;
+  text-transform: uppercase;
+  line-height: 1.45;
+}
+.cta-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 36px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, rgba(30, 27, 75, 0.8), rgba(15, 23, 42, 0.9));
+  border: 1.5px solid #818CF8;
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.45), inset 0 0 15px rgba(129, 140, 248, 0.25);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #E0E7FF;
+}
+.cta-pill-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: #818CF8;
+  stroke-width: 2.5;
 }
 </style>
 </head>
@@ -183,77 +276,96 @@ body {
 <div class="bg-image"></div>
 <div class="bg-overlay"></div>
 <div class="glow-orb"></div>
-<div class="content">
-  <div class="slide-num">{{ slide_counter|default('06 / 06') }}</div>
+<div class="glow-orb-cyan"></div>
 
+<div class="content">
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="category-tag">
+      {{ category|default('A NEW ERA') }} <span>/</span> {{ '%02d'|format(slide_number|default(6)) }}
+    </div>
+    <div class="slide-num">{{ slide_counter|default('06 / 06') }}</div>
+  </div>
+
+  <!-- Handwritten Callout -->
+  <div class="handwritten-callout">
+    <div class="handwritten-text">
+      {{ annotation|default('Free for the community.') }}
+    </div>
+    <svg class="handwritten-arrow" viewBox="0 0 40 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 5 C 18 8, 32 20, 24 35" stroke="#F472B6" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <path d="M15 32 L 24 36 L 27 27" stroke="#F472B6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+  </div>
+
+  <!-- Headline Section -->
   <div class="header-wrap">
     <div class="headline">
       {% if headline_prefix and headline_highlight %}
         {{ headline_prefix }}<br>
         <span class="gradient-text">{{ headline_highlight }}</span>
       {% else %}
-        A NEW ERA FOR<br>
-        <span class="gradient-text">CREATORS</span>
+        WANT THE FULL<br>
+        <span class="gradient-text">RESOURCE PACK?</span>
       {% endif %}
     </div>
-    <div class="subtext">{{ body_text|default(subtext)|default('Better tools. Bigger ideas. A more creative you.') }}</div>
+    <div class="subtext">{{ body_text|default(subtext)|default('I put together the complete free checklist, prompts & templates for you.') }}</div>
   </div>
 
-  <div class="benefits-container">
-    {% if benefits and benefits|length > 0 %}
-      {% for b in benefits[:4] %}
-        <div class="benefit-row">
-          <div class="benefit-icon">
-            {% if b.icon == 'bolt' or 'fast' in b.icon %}⚡
-            {% elif b.icon == 'infinity' or 'scale' in b.icon %}♾️
-            {% elif b.icon == 'users' or 'community' in b.icon %}👥
-            {% elif b.icon == 'rocket' or 'launch' in b.icon %}🚀
-            {% else %}✨{% endif %}
+  <!-- Lead Magnet Card -->
+  <div class="lead-pack-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 16px;">
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <span style="font-size:14px; font-weight:800; letter-spacing:2px; color:#38BDF8; text-transform:uppercase;">✦ FREE RESOURCE PACK</span>
+        <span style="font-size:28px; font-weight:800; color:#FFFFFF;">Complete {{ dm_keyword|default('VEO') }} Creator System</span>
+      </div>
+      <div style="background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.4); border-radius:9999px; padding:6px 16px; font-size:13px; font-weight:800; color:#38BDF8; letter-spacing:1.5px;">INSTANT ACCESS</div>
+    </div>
+
+    <div class="benefits-grid">
+      {% set default_benefits = [
+        {"icon": "⚡", "text": "Instant Actionable Prompts"},
+        {"icon": "∞", "text": "Save 10+ Hours of Trial & Error"},
+        {"icon": "👥", "text": "Tested by Top Creators"},
+        {"icon": "🚀", "text": "Immediate Real Results"}
+      ] %}
+
+      {% if benefits and benefits|length > 0 %}
+        {% for b in benefits[:4] %}
+          <div class="benefit-item">
+            <div class="benefit-icon-circle">{{ b.icon|default('✦') }}</div>
+            <div class="benefit-title">{{ b.text|default(b.title)|default('Actionable Takeaway') }}</div>
           </div>
-          <div class="benefit-text">{{ b.text|default(b.title)|default('Creator Advantage') }}</div>
-        </div>
-      {% endfor %}
-    {% else %}
-      <div class="benefit-row">
-        <div class="benefit-icon">⚡</div>
-        <div class="benefit-text">Create faster</div>
-      </div>
-      <div class="benefit-row">
-        <div class="benefit-icon">♾️</div>
-        <div class="benefit-text">More possibilities</div>
-      </div>
-      <div class="benefit-row">
-        <div class="benefit-icon">👥</div>
-        <div class="benefit-text">For everyone</div>
-      </div>
-      <div class="benefit-row">
-        <div class="benefit-icon">🚀</div>
-        <div class="benefit-text">The future is visual</div>
-      </div>
-    {% endif %}
-  </div>
-
-  <div class="annotation">
-    {{ annotation|default(annotation_text)|default("Create what doesn't exist yet.") }} ↘
-  </div>
-
-  <div class="cta-button">
-    <div class="cta-left">
-      <div class="cta-icon">📌</div>
-      <div class="cta-text-col">
-        <div class="cta-main-text">{{ cta_title|default('Save this post') }}</div>
-        <div class="cta-sub-text">{{ cta_subtitle|default('And start exploring the future.') }}</div>
-      </div>
+        {% endfor %}
+      {% else %}
+        {% for b in default_benefits %}
+          <div class="benefit-item">
+            <div class="benefit-icon-circle">{{ b.icon }}</div>
+            <div class="benefit-title">{{ b.text }}</div>
+          </div>
+        {% endfor %}
+      {% endif %}
     </div>
-    <div class="cta-arrow">→</div>
+
+    <!-- Comment-to-DM Banner Box -->
+    <div class="comment-dm-box">
+      <div class="dm-callout-text">
+        <span class="dm-callout-label">DROP A COMMENT BELOW</span>
+        <span class="dm-callout-sub">I'll send the full toolkit straight to your DMs</span>
+      </div>
+      <div class="keyword-badge">"{{ dm_keyword|default('VEO') }}"</div>
+    </div>
   </div>
 
+  <!-- Bottom Row: Tagline + Glowing Pill Button -->
   <div class="bottom-row">
-    <div class="dots">
-      <span></span><span></span><span></span><span></span><span></span>
-      <span class="active"></span>
+    <div class="footer-tagline">
+      {{ tagline_left|default('BETTER TOOLS.<br>BRIGHTER IDEAS.')|safe }}
     </div>
-    <div class="arrow">→</div>
+    <div class="cta-pill-btn">
+      <span>{{ cta_button_text|default('COMMENT "' ~ dm_keyword|default('VEO') ~ '" TO GET IT') }}</span>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
   </div>
 </div>
 </body>

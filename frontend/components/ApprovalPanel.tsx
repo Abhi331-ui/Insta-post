@@ -94,6 +94,8 @@ export default function ApprovalPanel({ post, onActionComplete }: ApprovalPanelP
         return "bg-amber-500/15 text-amber-400 border-amber-500/30";
       case "failed":
         return "bg-rose-500/15 text-rose-400 border-rose-500/30";
+      case "rejected":
+        return "bg-slate-800/90 text-rose-400 border-rose-500/30";
       default:
         return "bg-slate-800 text-slate-300 border-slate-700";
     }
@@ -122,7 +124,7 @@ export default function ApprovalPanel({ post, onActionComplete }: ApprovalPanelP
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <button
           onClick={handleApprove}
-          disabled={loadingAction !== null || post.status === "scheduled" || post.status === "published"}
+          disabled={loadingAction !== null || post.status === "scheduled" || post.status === "published" || post.status === "rejected"}
           className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold shadow-lg shadow-emerald-600/20 active:scale-95 transition-all disabled:opacity-40"
         >
           <Check className="w-4 h-4" />
@@ -131,7 +133,7 @@ export default function ApprovalPanel({ post, onActionComplete }: ApprovalPanelP
 
         <button
           onClick={handleReject}
-          disabled={loadingAction !== null}
+          disabled={loadingAction !== null || post.status === "rejected" || post.status === "published"}
           className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 text-rose-400 border border-rose-500/30 text-sm font-bold active:scale-95 transition-all disabled:opacity-40"
         >
           <X className="w-4 h-4" />
@@ -149,7 +151,7 @@ export default function ApprovalPanel({ post, onActionComplete }: ApprovalPanelP
 
         <button
           onClick={handlePublishNow}
-          disabled={loadingAction !== null || post.status === "published"}
+          disabled={loadingAction !== null || post.status === "published" || post.status === "rejected"}
           className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold shadow-lg shadow-blue-600/20 active:scale-95 transition-all disabled:opacity-40"
         >
           <Send className="w-4 h-4" />

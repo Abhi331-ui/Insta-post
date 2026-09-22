@@ -1,17 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getPosts, getPost } from "@/lib/api";
+import { getPosts, getPost, getShareLink, getExportPdfUrl } from "@/lib/api";
 import SlidePreview from "@/components/SlidePreview";
 import WhyThisPost from "@/components/WhyThisPost";
 import ApprovalPanel from "@/components/ApprovalPanel";
-import { LayoutGrid, Filter, Clock, X, ExternalLink } from "lucide-react";
+import CreateCarouselModal from "@/components/CreateCarouselModal";
+import { LayoutGrid, Filter, Clock, X, ExternalLink, Share2, Download, Check, Sparkles, MessageCircle } from "lucide-react";
 
 export default function PostsPage() {
   const [posts, setPosts] = useState<any[]>([]);
   const [statusFilter, setStatusFilter] = useState("");
   const [selectedPost, setSelectedPost] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [copiedShareLink, setCopiedShareLink] = useState(false);
+  const [sharingPostId, setSharingPostId] = useState<number | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const loadPosts = async () => {
     try {
@@ -35,6 +39,23 @@ export default function PostsPage() {
       setSelectedPost(p);
     } catch (e: any) {
       alert("Error loading post: " + e.message);
+    }
+  };
+
+  const handleShareReview = async (e: React.MouseEvent, postId: number) => {
+    e.stopPropagation();
+    try {
+      setSharingPostId(postId);
+      const res = await getShareLink(postId);
+      if (res.share_url) {
+        await navigator.clipboard.writeText(res.share_url);
+        setCopiedShareLink(true);
+        setTimeout(() => setCopiedShareLink(false), 3000);
+      }
+    } catch (err: any) {
+      alert("Error getting review link: " + err.message);
+    } finally {
+      setSharingPostId(null);
     }
   };
 
@@ -63,23 +84,40 @@ export default function PostsPage() {
           </p>
         </div>
 
-        {/* Filter Buttons */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1">
-          {["", "pending_approval", "scheduled", "published", "failed"].map((st) => (
-            <button
-              key={st}
-              onClick={() => setStatusFilter(st)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize whitespace-nowrap transition-all ${
-                statusFilter === st
-                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
-                  : "bg-slate-900 text-slate-400 hover:text-white border border-slate-800"
-              }`}
-            >
-              {st === "" ? "All Posts" : st.replace("_", " ")}
-            </button>
-          ))}
+        {/* Filter Buttons & Create Button */}
+        <div className="flex items-center gap-3 overflow-x-auto pb-1">
+          <div className="flex items-center gap-2">
+            {["", "pending_approval", "scheduled", "published", "failed"].map((st) => (
+              <button
+                key={st}
+                onClick={() => setStatusFilter(st)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize whitespace-nowrap transition-all ${
+                  statusFilter === st
+                    ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
+                    : "bg-slate-900 text-slate-400 hover:text-white border border-slate-800"
+                }`}
+              >
+                {st === "" ? "All Posts" : st.replace("_", " ")}
+              </button>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsCreateModalOpen(true)}
+            className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 hover:opacity-95 text-white text-xs font-bold shadow-md shadow-purple-600/20 active:scale-95 transition-all whitespace-nowrap"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>✦ Create Carousel</span>
+          </button>
         </div>
       </div>
+
+      <CreateCarouselModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSuccess={loadPosts}
+      />
 
       {/* Posts Grid */}
       {loading ? (
@@ -119,7 +157,14 @@ export default function PostsPage() {
               </div>
 
               <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-500">
-                <span>{post.content_pillar || "AI Productivity"}</span>
+                <div className="flex items-center gap-2">
+                  <span>{post.content_pillar || "AI Productivity"}</span>
+                  {post.dm_keyword && (
+                    <span className="px-1.5 py-0.5 rounded bg-purple-950/60 text-purple-300 border border-purple-800/40 text-[10px] font-mono">
+                      💬 {post.dm_keyword}
+                    </span>
+                  )}
+                </div>
                 <span className="font-semibold text-slate-400">6 Slides →</span>
               </div>
             </div>
@@ -148,6 +193,36 @@ export default function PostsPage() {
               </div>
 
               <div className="lg:col-span-7 flex flex-col gap-6">
+                {/* Monetization & Client Collaboration Toolbar */}
+                <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={(e) => handleShareReview(e, selectedPost.id)}
+                      disabled={sharingPostId === selectedPost.id}
+                      className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-600/20 active:scale-95 transition-all"
+                    >
+                      {copiedShareLink ? <Check className="w-3.5 h-3.5" /> : <Share2 className="w-3.5 h-3.5" />}
+                      {copiedShareLink ? "Review Link Copied!" : "Share with Client"}
+                    </button>
+
+                    <a
+                      href={getExportPdfUrl(selectedPost.id)}
+                      download
+                      className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      LinkedIn PDF
+                    </a>
+                  </div>
+
+                  {selectedPost.dm_keyword && (
+                    <div className="flex items-center gap-1.5 text-xs text-purple-300 font-mono bg-purple-950/40 px-2.5 py-1 rounded-lg border border-purple-800/40">
+                      <Sparkles className="w-3 h-3 text-purple-400" />
+                      Comment: <b>"{selectedPost.dm_keyword}"</b>
+                    </div>
+                  )}
+                </div>
+
                 <WhyThisPost post={selectedPost} />
                 <ApprovalPanel post={selectedPost} onActionComplete={() => { loadPosts(); handleSelectPost(selectedPost.id); }} />
               </div>

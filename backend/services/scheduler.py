@@ -55,11 +55,33 @@ class SchedulerService:
         brand.active_days = active_days
         db.commit()
 
-        return {
-            "posting_time": brand.posting_time,
-            "timezone": brand.timezone,
-            "active_days": brand.active_days,
-        }
+    async def publish_due_posts(self, db: Session) -> list:
+        """Finds all pending scheduled posts that are due and publishes them."""
+        from backend.agents.publishing_agent import publishing_agent
+
+        now = datetime.utcnow()
+        due_posts = (
+            db.query(ScheduledPost)
+            .filter(
+                ScheduledPost.status == "pending",
+                ScheduledPost.is_published == False,
+                ScheduledPost.scheduled_time <= now,
+            )
+            .all()
+        )
+        results = []
+        for sched in due_posts:
+            try:
+                res = await publishing_agent.publish_to_instagram(sched.post_id, db)
+                results.append({"post_id": sched.post_id, "result": res})
+            except Exception as e:
+                logger.error(f"Error auto-publishing scheduled post {sched.post_id}: {e}")
+                sched.status = "failed"
+                sched.error_message = str(e)
+                db.commit()
+                results.append({"post_id": sched.post_id, "error": str(e)})
+
+        return results
 
 
 scheduler_service = SchedulerService()

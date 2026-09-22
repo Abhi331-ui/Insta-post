@@ -1,0 +1,86 @@
+<style>
+:root {
+  --ink: #0F172A;
+  --ink-deep: #08111F;
+  --paper: #FFFFFF;
+  --muted: #94A3B8;
+  --line: rgba(148, 163, 184, 0.24);
+  --blue: #2563EB;
+  --blue-soft: #60A5FA;
+  --cyan: #BAE6FD;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 1080px; height: 1350px; }
+body {
+  position: relative;
+  overflow: hidden;
+  color: var(--paper);
+  background: var(--ink);
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.bg-image {
+  position: absolute; inset: 0;
+  background-image: url('{{ background_image_url }}');
+  background-position: center;
+  background-size: cover;
+  opacity: .19;
+  filter: saturate(.72) contrast(1.08);
+}
+.bg-wash {
+  position: absolute; inset: 0;
+  background: linear-gradient(145deg, rgba(15, 23, 42, .97) 0%, rgba(15, 23, 42, .84) 52%, rgba(37, 99, 235, .28) 100%);
+}
+.page {
+  position: relative; z-index: 2;
+  width: 100%; height: 100%;
+  padding: 58px 68px 54px;
+  display: flex; flex-direction: column;
+}
+.meta {
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: 32px;
+  color: var(--muted);
+  font-size: 18px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase;
+}
+.meta .index { color: var(--paper); letter-spacing: 1px; }
+.rule { height: 1px; background: var(--line); margin: 22px 0 34px; }
+.eyebrow {
+  color: var(--blue-soft);
+  font-size: 19px; font-weight: 800;
+  letter-spacing: 4px; text-transform: uppercase;
+}
+.headline {
+  max-width: 920px;
+  margin-top: 18px;
+  font-size: 92px; line-height: .91;
+  font-weight: 850; letter-spacing: -3px;
+  text-transform: uppercase;
+}
+.headline .accent, .accent { color: var(--blue-soft); }
+.subtext {
+  max-width: 720px; margin-top: 24px;
+  color: #CBD5E1; font-size: 27px; line-height: 1.25;
+}
+.footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: auto; color: var(--muted);
+  font-size: 17px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.footer .brand { color: var(--paper); }
+.mark { color: var(--blue-soft); font-size: 26px; letter-spacing: 0; }
+.visual-frame {
+  position: relative; overflow: hidden;
+  border: 1px solid var(--line);
+  background: rgba(8, 17, 31, .68);
+  box-shadow: 0 24px 55px rgba(2, 6, 23, .34);
+}
+.visual-frame img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.label {
+  color: var(--blue-soft); font-size: 16px; font-weight: 800;
+  letter-spacing: 2px; text-transform: uppercase;
+}
+.small-copy { color: #CBD5E1; font-size: 20px; line-height: 1.22; }
+</style>

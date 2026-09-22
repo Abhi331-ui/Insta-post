@@ -116,18 +116,35 @@ async def submit_topic_batch(
     if posts_per_day not in (1, 2, 3):
         posts_per_day = 1
 
-    # Optimal Instagram time slots based on daily posting frequency:
-    # 1 post / day:  [09:00] (Morning prime)
-    # 2 posts / day: [09:00, 18:00] (Morning & Evening prime)
-    # 3 posts / day: [09:00, 13:00, 20:00] (Morning, Lunchtime, Evening prime)
-    if posts_per_day == 1:
-        slot_hours = [(post_hour, post_minute)]
-    elif posts_per_day == 2:
-        slot_hours = [(post_hour, post_minute), (18, 0)]
-    elif posts_per_day == 3:
-        slot_hours = [(post_hour, post_minute), (13, 0), (20, 0)]
+    # Use user-configured posting times from BrandSetting, falling back to optimal defaults
+    user_posting_times = brand.posting_times if brand and brand.posting_times else None
+    if isinstance(user_posting_times, str):
+        try:
+            import json
+            user_posting_times = json.loads(user_posting_times)
+        except Exception:
+            user_posting_times = None
+    if user_posting_times and isinstance(user_posting_times, list) and len(user_posting_times) >= posts_per_day:
+        slot_hours = []
+        for t in user_posting_times[:posts_per_day]:
+            try:
+                h, m = map(int, t.split(":"))
+                slot_hours.append((h, m))
+            except Exception:
+                slot_hours.append((post_hour, post_minute))
     else:
-        slot_hours = [(post_hour, post_minute)]
+        # Optimal Instagram time slot defaults:
+        # 1 post / day:  [user's primary time] (Morning prime)
+        # 2 posts / day: [user's primary time, 18:00] (Morning & Evening prime)
+        # 3 posts / day: [user's primary time, 13:00, 20:00] (Morning, Lunchtime, Evening prime)
+        if posts_per_day == 1:
+            slot_hours = [(post_hour, post_minute)]
+        elif posts_per_day == 2:
+            slot_hours = [(post_hour, post_minute), (18, 0)]
+        elif posts_per_day == 3:
+            slot_hours = [(post_hour, post_minute), (13, 0), (20, 0)]
+        else:
+            slot_hours = [(post_hour, post_minute)]
 
     batch_id = f"batch_{int(now.timestamp())}_{uuid.uuid4().hex[:6]}"
     created_items = []
@@ -217,12 +234,16 @@ def get_queue(
             if it.post.slides:
                 for s in sorted(it.post.slides, key=lambda x: x.slide_number):
                     if s.image_path:
-                        fn = Path(s.image_path).name
+                        if s.image_path.startswith(("http://", "https://", "data:")):
+                            slide_img_url = s.image_path
+                        else:
+                            fn = Path(s.image_path).name
+                            slide_img_url = f"{settings.PUBLIC_MEDIA_BASE_URL}/slides/{fn}"
                         slides_list.append({
                             "slide_number": s.slide_number,
                             "headline": s.headline,
                             "layout_type": s.layout_type,
-                            "image_url": f"{settings.PUBLIC_MEDIA_BASE_URL}/slides/{fn}",
+                            "image_url": slide_img_url,
                         })
                 if slides_list:
                     img_url = slides_list[0]["image_url"]

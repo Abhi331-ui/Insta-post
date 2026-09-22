@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Slide {{ slide_number|default(4) }} - How It Works (Steps)</title>
+<title>Slide {{ slide_number|default(4) }} - How It Works</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   width: 1080px; height: 1350px;
-  background: #000000;
+  background: #020617;
   font-family: 'Inter', sans-serif;
   position: relative;
   overflow: hidden;
@@ -20,160 +20,484 @@ body {
   position: absolute; inset: 0;
   background-image: url('{{ background_image_url }}');
   background-size: cover;
-  background-position: center;
-  opacity: 0.42;
+  background-position: center bottom;
+  opacity: 0.38;
 }
 .bg-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.72) 50%, rgba(0,0,0,0.90) 100%);
+  background: radial-gradient(circle at 70% 30%, rgba(30, 27, 75, 0.4) 0%, rgba(2, 6, 23, 0.85) 60%, #020617 100%),
+              linear-gradient(180deg, rgba(2, 6, 23, 0.25) 0%, rgba(2, 6, 23, 0.85) 75%, #020617 100%);
 }
 .glow-orb {
   position: absolute;
+  width: 650px; height: 650px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.22) 0%, rgba(168, 85, 247, 0.12) 50%, transparent 70%);
+  filter: blur(90px);
+  top: 25%; right: -80px;
+  pointer-events: none;
+}
+.glow-orb-cyan {
+  position: absolute;
   width: 500px; height: 500px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, rgba(124, 58, 237, 0.18) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.18) 0%, transparent 65%);
   filter: blur(80px);
-  top: 30%; left: -100px;
+  bottom: 25%; left: -100px;
   pointer-events: none;
 }
 .content {
   position: relative; z-index: 2;
-  padding: 60px 70px;
+  padding: 55px 65px;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
-.slide-num {
-  align-self: flex-end;
-  font-size: 26px; color: #9CA3AF; font-weight: 500;
-  letter-spacing: 2px;
-}
-.header-wrap {
-  margin-top: 10px;
-  margin-bottom: 24px;
-}
-.headline {
-  font-size: 96px; font-weight: 900;
-  line-height: 0.95;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-}
-.gradient-text {
-  background: linear-gradient(135deg, #A855F7, #3B82F6, #EC4899);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  display: inline-block;
-}
-.subtext {
-  font-size: 34px; color: #D1D5DB;
-  line-height: 1.4; margin-top: 18px;
-}
-.steps-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex: 1;
-  margin: 10px 0 20px 0;
-}
-.step-row {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  margin-bottom: 34px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 24px;
-  padding: 16px 20px;
-  backdrop-filter: blur(8px);
-}
-.step-num {
-  width: 70px; height: 70px;
-  border-radius: 50%;
-  background: #5B21B6;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 28px; font-weight: 900; color: white;
-  flex-shrink: 0;
-  box-shadow: 0 0 20px rgba(91, 33, 182, 0.6);
-}
-.step-icon {
-  width: 70px; height: 70px;
-  border-radius: 16px;
-  background: rgba(124, 58, 237, 0.3);
-  border: 1px solid rgba(124, 58, 237, 0.5);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 32px;
-  flex-shrink: 0;
-}
-.step-text-wrap {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-.step-text-title {
-  font-size: 34px; font-weight: 700; color: #FFFFFF;
-  line-height: 1.2;
-}
-.step-text-desc {
-  font-size: 26px; color: #9CA3AF; margin-top: 4px;
-  line-height: 1.3;
-}
-.neon-wave {
-  position: absolute;
-  bottom: 140px; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, #06B6D4 20%, #06B6D4 80%, transparent);
-  filter: blur(2px);
-  box-shadow: 0 0 20px #06B6D4, 0 0 40px #06B6D4;
-}
-.neon-wave-waveart {
-  position: absolute;
-  bottom: 135px; left: 60px; right: 60px;
-  height: 40px;
-  pointer-events: none;
-  opacity: 0.7;
-}
-.annotation-wrap {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 24px;
-}
-.annotation {
-  font-family: 'Caveat', 'Inter', cursive;
-  font-style: italic; font-size: 32px;
-  color: #F472B6;
-  text-shadow: 0 0 15px rgba(244, 114, 182, 0.45);
-}
-.bottom-row {
-  position: relative;
-  z-index: 10;
+
+/* Top Header Bar */
+.top-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 24px;
 }
-.dots {
+.category-tag {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #38BDF8;
+  text-transform: uppercase;
+}
+.category-tag span {
+  color: #C084FC;
+  margin: 0 8px;
+}
+.slide-num {
+  font-size: 26px;
+  color: #94A3B8;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+/* Handwritten Callout */
+.handwritten-callout {
+  position: absolute;
+  top: 92px;
+  right: 65px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  z-index: 5;
+  pointer-events: none;
+}
+.handwritten-text {
+  font-family: 'Caveat', cursive;
+  font-size: 34px;
+  color: #F472B6;
+  line-height: 1.1;
+  text-align: right;
+  text-shadow: 0 0 15px rgba(244, 114, 182, 0.5);
+  transform: rotate(-3deg);
+}
+.handwritten-arrow {
+  width: 48px;
+  height: 52px;
+  margin-top: 4px;
+  margin-right: 18px;
+  filter: drop-shadow(0 0 8px rgba(244, 114, 182, 0.6));
+}
+
+/* Headline Section */
+.header-wrap {
+  margin-bottom: 28px;
+  max-width: 820px;
+}
+.headline {
+  font-size: 92px;
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #FFFFFF;
+}
+.gradient-text {
+  background: linear-gradient(135deg, #38BDF8 0%, #818CF8 50%, #E879F9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline;
+}
+.subtext {
+  font-size: 30px;
+  color: #CBD5E1;
+  line-height: 1.35;
+  margin-top: 18px;
+  font-weight: 400;
+}
+
+/* Main Split Stage (Left Steps + Right Monitor Mockup) */
+.stage-split {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 28px;
+  flex: 1;
+  margin-bottom: 20px;
+  align-items: stretch;
+}
+
+/* Left Column: 4 Progressive Steps */
+.steps-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+.steps-connecting-line {
+  position: absolute;
+  top: 50px;
+  bottom: 50px;
+  left: 36px;
+  width: 2px;
+  background: linear-gradient(180deg, #38BDF8 0%, #818CF8 35%, #C084FC 70%, #F472B6 100%);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+  z-index: 1;
+}
+
+.step-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 20px;
+  padding: 16px 20px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  position: relative;
+  z-index: 2;
+}
+
+.step-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-.dots span {
-  display: inline-block;
-  width: 12px; height: 12px;
-  border-radius: 50%;
-  background: #4B5563;
-}
-.dots span.active {
-  background: #7C3AED;
-  width: 32px;
-  border-radius: 6px;
-  box-shadow: 0 0 12px rgba(124, 58, 237, 0.6);
-}
-.arrow {
-  font-size: 40px;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 900;
   color: #FFFFFF;
-  line-height: 1;
+  flex-shrink: 0;
+}
+.badge-1 {
+  background: #0284C7;
+  border: 2px solid #38BDF8;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.6);
+}
+.badge-2 {
+  background: #6366F1;
+  border: 2px solid #818CF8;
+  box-shadow: 0 0 16px rgba(99, 102, 241, 0.6);
+}
+.badge-3 {
+  background: #9333EA;
+  border: 2px solid #C084FC;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.6);
+}
+.badge-4 {
+  background: #DB2777;
+  border: 2px solid #F472B6;
+  box-shadow: 0 0 16px rgba(236, 72, 153, 0.6);
+}
+
+.step-content {
+  flex: 1;
+  min-width: 0;
+}
+.step-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+.step-desc {
+  font-size: 17px;
+  color: #94A3B8;
+  line-height: 1.35;
+}
+.step-example {
+  font-size: 15px;
+  color: #CBD5E1;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+/* Micro badges & Progress */
+.chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.micro-chip {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #E2E8F0;
+}
+
+.progress-wrap {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.progress-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  width: 68%;
+  height: 100%;
+  background: linear-gradient(90deg, #38BDF8, #A855F7);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+  border-radius: 9999px;
+}
+.progress-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #C084FC;
+}
+
+/* Right Column: UI Workspace Mockup */
+.mockup-col {
+  background: rgba(10, 15, 30, 0.75);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 24px;
+  padding: 22px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 35px rgba(56, 189, 248, 0.2);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.mockup-col::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, #38BDF8, transparent);
+}
+
+.mockup-header-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: #94A3B8;
+  margin-bottom: 12px;
+}
+
+/* Search Prompt Bar */
+.mockup-prompt-bar {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.sparkle-icon {
+  color: #38BDF8;
+  font-size: 18px;
+}
+.prompt-input-text {
+  flex: 1;
+  font-size: 14px;
+  color: #E2E8F0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.prompt-go-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #2563EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* Video Player Display */
+.mockup-player-wrap {
+  flex: 1;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+  position: relative;
+  background: #090D16;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.player-thumb-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.85;
+}
+.player-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);
+}
+
+.player-center-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+  z-index: 2;
+}
+.player-center-play svg {
+  width: 24px;
+  height: 24px;
+  margin-left: 3px;
+  fill: #FFFFFF;
+}
+
+.player-bottom-controls {
+  position: relative;
+  z-index: 2;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.play-mini-btn {
+  font-size: 14px;
+  color: #FFFFFF;
+}
+.timeline-bar {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.timeline-fill {
+  width: 42%;
+  height: 100%;
+  background: #38BDF8;
+}
+.duration-text {
+  font-size: 12px;
+  color: #CBD5E1;
+  font-family: monospace;
+}
+
+/* Right sidebar icons in player */
+.player-side-tools {
+  position: absolute;
+  right: 12px;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 2;
+}
+.tool-icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #CBD5E1;
+}
+
+/* Creator Silhouette & Desk Area */
+.mockup-creator-area {
+  margin-top: 14px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+.creator-quote-pill {
+  font-size: 13px;
+  color: #94A3B8;
+  line-height: 1.3;
+}
+.creator-callout {
+  font-family: 'Caveat', cursive;
+  font-size: 26px;
+  color: #818CF8;
+  text-shadow: 0 0 10px rgba(129, 140, 248, 0.5);
+  transform: rotate(-4deg);
+}
+
+/* Bottom Row */
+.bottom-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-top: 10px;
+}
+.footer-tagline {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: #94A3B8;
+  text-transform: uppercase;
+  line-height: 1.45;
+}
+.cta-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 36px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, rgba(30, 27, 75, 0.8), rgba(15, 23, 42, 0.9));
+  border: 1.5px solid #818CF8;
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.45), inset 0 0 15px rgba(129, 140, 248, 0.25);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #E0E7FF;
+}
+.cta-pill-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: #818CF8;
+  stroke-width: 2.5;
 }
 </style>
 </head>
@@ -181,91 +505,183 @@ body {
 <div class="bg-image"></div>
 <div class="bg-overlay"></div>
 <div class="glow-orb"></div>
-<div class="neon-wave"></div>
-{% if asset_slide4_wave %}
-  <img class="neon-wave-waveart" src="{{ asset_slide4_wave }}" alt="Neon Wave">
-{% endif %}
-<div class="content">
-  <div class="slide-num">{{ slide_counter|default('04 / 06') }}</div>
+<div class="glow-orb-cyan"></div>
 
+<div class="content">
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="category-tag">
+      {{ category|default('HOW IT WORKS') }} <span>/</span> {{ '%02d'|format(slide_number|default(4)) }}
+    </div>
+    <div class="slide-num">{{ slide_counter|default('04 / 06') }}</div>
+  </div>
+
+  <!-- Handwritten Callout -->
+  <div class="handwritten-callout">
+    <div class="handwritten-text">
+      {{ annotation|default('Simple steps. Incredible results.') }}
+    </div>
+    <svg class="handwritten-arrow" viewBox="0 0 40 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 5 C 18 8, 32 20, 24 35" stroke="#F472B6" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <path d="M15 32 L 24 36 L 27 27" stroke="#F472B6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+  </div>
+
+  <!-- Headline Section -->
   <div class="header-wrap">
     <div class="headline">
       {% if headline_prefix and headline_highlight %}
-        {{ headline_prefix }} <span class="gradient-text">{{ headline_highlight }}</span>
+        {{ headline_prefix }}<br>
+        <span class="gradient-text">{{ headline_highlight }}</span>
       {% else %}
-        HOW IT <span class="gradient-text">WORKS</span>
+        FROM PROMPT<br>
+        <span class="gradient-text">TO MASTERPIECE.</span>
       {% endif %}
     </div>
-    <div class="subtext">{{ body_text|default(subtext)|default('Turn your idea into a video in 4 simple steps.') }}</div>
+    <div class="subtext">{{ body_text|default(subtext)|default('Create stunning videos in just a few simple steps.') }}</div>
   </div>
 
-  <div class="steps-container">
-    {% if steps and steps|length > 0 %}
-      {% for s in steps[:4] %}
-        <div class="step-row">
-          <div class="step-num">0{{ loop.index }}</div>
-          <div class="step-icon">
-            {% if loop.index == 1 %}✍️
-            {% elif loop.index == 2 %}⚡
-            {% elif loop.index == 3 %}🎛️
-            {% elif loop.index == 4 %}🚀
-            {% else %}✨{% endif %}
-          </div>
-          <div class="step-text-wrap">
-            <div class="step-text-title">{{ s.title|default('Step') }}</div>
-            <div class="step-text-desc">{{ s.desc|default(s.description)|default('') }}</div>
-          </div>
-        </div>
-      {% endfor %}
-    {% else %}
-      <div class="step-row">
-        <div class="step-num">01</div>
-        <div class="step-icon">✍️</div>
-        <div class="step-text-wrap">
-          <div class="step-text-title">Enter your prompt</div>
-          <div class="step-text-desc">Describe what you want to see.</div>
-        </div>
-      </div>
-      <div class="step-row">
-        <div class="step-num">02</div>
-        <div class="step-icon">⚡</div>
-        <div class="step-text-wrap">
-          <div class="step-text-title">AI generates</div>
-          <div class="step-text-desc">AI creates the video with audio.</div>
-        </div>
-      </div>
-      <div class="step-row">
-        <div class="step-num">03</div>
-        <div class="step-icon">🎛️</div>
-        <div class="step-text-wrap">
-          <div class="step-text-title">Customize</div>
-          <div class="step-text-desc">Adjust style, length or details.</div>
-        </div>
-      </div>
-      <div class="step-row">
-        <div class="step-num">04</div>
-        <div class="step-icon">🚀</div>
-        <div class="step-text-wrap">
-          <div class="step-text-title">Download & share</div>
-          <div class="step-text-desc">Use for personal or commercial projects.</div>
-        </div>
-      </div>
-    {% endif %}
-  </div>
+  <!-- Split Stage: Steps (Left) + UI Mockup (Right) -->
+  <div class="stage-split">
+    <!-- Left: 4 Steps -->
+    <div class="steps-col">
+      <div class="steps-connecting-line"></div>
 
-  <div class="annotation-wrap">
-    <div class="annotation">
-      ↙ {{ annotation|default(annotation_text)|default('Ideas -> Videos. That simple.') }}
+      <!-- Step 1 -->
+      <div class="step-card">
+        <div class="step-badge badge-1">01</div>
+        <div class="step-content">
+          <div class="step-title">
+            {{ steps[0].title|default('Write Your Prompt') if steps and steps|length > 0 else 'Write Your Prompt' }}
+          </div>
+          <div class="step-desc">
+            {{ steps[0].desc|default('Describe what you want to create in simple text.') if steps and steps|length > 0 else 'Describe what you want to create in simple text.' }}
+          </div>
+          <div class="step-example">
+            {{ steps[0].example|default('e.g. "A serene mountain lake at sunset, cinematic style"') if steps and steps|length > 0 else 'e.g. "A serene mountain lake at sunset, cinematic style"' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card">
+        <div class="step-badge badge-2">02</div>
+        <div class="step-content">
+          <div class="step-title">
+            {{ steps[1].title|default('Customize (Optional)') if steps and steps|length > 1 else 'Customize (Optional)' }}
+          </div>
+          <div class="step-desc">
+            {{ steps[1].desc|default('Choose style, aspect ratio and parameters.') if steps and steps|length > 1 else 'Choose style, aspect ratio and other settings.' }}
+          </div>
+          <div class="chips-row">
+            <span class="micro-chip">Style</span>
+            <span class="micro-chip">Duration</span>
+            <span class="micro-chip">Aspect Ratio</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card">
+        <div class="step-badge badge-3">03</div>
+        <div class="step-content">
+          <div class="step-title">
+            {{ steps[2].title|default('Generate') if steps and steps|length > 2 else 'Generate' }}
+          </div>
+          <div class="step-desc">
+            {{ steps[2].desc|default('Let AI do the magic. It creates high-quality output.') if steps and steps|length > 2 else 'Let AI do the magic. It creates high-quality video with native audio.' }}
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill"></div>
+            </div>
+            <span class="progress-label">Generating...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-card">
+        <div class="step-badge badge-4">04</div>
+        <div class="step-content">
+          <div class="step-title">
+            {{ steps[3].title|default('Download & Share') if steps and steps|length > 3 else 'Download & Share' }}
+          </div>
+          <div class="step-desc">
+            {{ steps[3].desc|default('Preview, download and share your masterpiece.') if steps and steps|length > 3 else 'Preview, download and share your masterpiece.' }}
+          </div>
+          <div class="chips-row">
+            <span class="micro-chip">MP4</span>
+            <span class="micro-chip">High Quality</span>
+            <span class="micro-chip">Ready to Share</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: UI Workspace Mockup -->
+    <div class="mockup-col">
+      <div class="mockup-header-text">Your Prompt</div>
+
+      <!-- Search prompt bar -->
+      <div class="mockup-prompt-bar">
+        <span class="sparkle-icon">✦</span>
+        <span class="prompt-input-text">{{ mockup_prompt|default('A peaceful mountain lake at sunset, cinematic, with soft music') }}</span>
+        <div class="prompt-go-btn">→</div>
+      </div>
+
+      <!-- Video Player Display -->
+      <div class="mockup-player-wrap">
+        {% if asset_thumb_cinematic %}
+          <img class="player-thumb-img" src="{{ asset_thumb_cinematic }}" alt="Player Preview">
+        {% else %}
+          <div style="width:100%;height:100%;background:linear-gradient(135deg,#1E1B4B,#0F172A);"></div>
+        {% endif %}
+        <div class="player-overlay"></div>
+
+        <!-- Center Play Button -->
+        <div class="player-center-play">
+          <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+        </div>
+
+        <!-- Side tool buttons -->
+        <div class="player-side-tools">
+          <div class="tool-icon-btn">▶</div>
+          <div class="tool-icon-btn">♫</div>
+          <div class="tool-icon-btn">⚙</div>
+        </div>
+
+        <!-- Bottom Controls -->
+        <div class="player-bottom-controls">
+          <span class="play-mini-btn">▶</span>
+          <div class="timeline-bar">
+            <div class="timeline-fill"></div>
+          </div>
+          <span class="duration-text">0:00 / 0:08</span>
+        </div>
+      </div>
+
+      <!-- Creator Desk Quote -->
+      <div class="mockup-creator-area">
+        <div class="creator-quote-pill">
+          Good ideas<br>change everything.
+        </div>
+        <div class="creator-callout">
+          Ideas in motion. ⤵
+        </div>
+      </div>
     </div>
   </div>
 
+  <!-- Bottom Row: Tagline + Glowing Pill Button -->
   <div class="bottom-row">
-    <div class="dots">
-      <span></span><span></span><span></span>
-      <span class="active"></span>
-      <span></span><span></span>
+    <div class="footer-tagline">
+      {{ tagline_left|default('SAME IDEA.<br>A BIGGER WORLD.')|safe }}
     </div>
-    <div class="arrow">→</div>
+    <div class="cta-pill-btn">
+      <span>{{ cta_button_text|default('NEXT: SEE REAL EXAMPLES') }}</span>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
   </div>
 </div>
 </body>

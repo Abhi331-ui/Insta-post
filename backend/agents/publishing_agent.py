@@ -55,8 +55,20 @@ class PublishingAgent:
 
         caption_text = f"{post.caption}\n\n{post.hashtags}" if post.hashtags else post.caption
 
+        # Resolve Instagram credentials: user connected account takes priority
+        from backend.models.user import InstagramAccount
+        from backend.services.instagram import InstagramService
+        ig_acc = db.query(InstagramAccount).filter(InstagramAccount.user_id == post.user_id).first()
+        if ig_acc and ig_acc.access_token and ig_acc.instagram_user_id:
+            insta_svc = InstagramService(
+                access_token=ig_acc.access_token,
+                instagram_user_id=ig_acc.instagram_user_id,
+            )
+        else:
+            insta_svc = self.instagram
+
         # Execute Instagram API publish
-        result = await self.instagram.publish_carousel(
+        result = await insta_svc.publish_carousel(
             image_urls=image_urls,
             caption=caption_text or "",
             max_retries=3,

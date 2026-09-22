@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Slide {{ slide_number|default(3) }} - What Can You Create / Use Cases</title>
+<title>Slide {{ slide_number|default(3) }} - Real Possibilities</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   width: 1080px; height: 1350px;
-  background: #000000;
+  background: #020617;
   font-family: 'Inter', sans-serif;
   position: relative;
   overflow: hidden;
@@ -20,148 +20,311 @@ body {
   position: absolute; inset: 0;
   background-image: url('{{ background_image_url }}');
   background-size: cover;
-  background-position: center;
-  opacity: 0.42;
+  background-position: center bottom;
+  opacity: 0.38;
 }
 .bg-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.72) 50%, rgba(0,0,0,0.90) 100%);
+  background: radial-gradient(circle at 50% 20%, rgba(15, 23, 42, 0.4) 0%, rgba(2, 6, 23, 0.85) 65%, #020617 100%),
+              linear-gradient(180deg, rgba(2, 6, 23, 0.2) 0%, rgba(2, 6, 23, 0.8) 75%, #020617 100%);
 }
 .glow-orb {
   position: absolute;
+  width: 650px; height: 650px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.25) 0%, rgba(37, 99, 235, 0.15) 45%, transparent 70%);
+  filter: blur(90px);
+  top: 30%; right: -120px;
+  pointer-events: none;
+}
+.glow-orb-cyan {
+  position: absolute;
   width: 500px; height: 500px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(124, 58, 237, 0.22) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.16) 0%, transparent 65%);
   filter: blur(80px);
-  top: 40%; right: -100px;
+  bottom: 20%; left: -100px;
   pointer-events: none;
 }
 .content {
   position: relative; z-index: 2;
-  padding: 60px 70px;
+  padding: 55px 65px;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
+
+/* Top Header Bar */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.category-tag {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #38BDF8;
+  text-transform: uppercase;
+}
+.category-tag span {
+  color: #C084FC;
+  margin: 0 8px;
+}
 .slide-num {
-  align-self: flex-end;
-  font-size: 26px; color: #9CA3AF; font-weight: 500;
+  font-size: 26px;
+  color: #94A3B8;
+  font-weight: 600;
   letter-spacing: 2px;
 }
+
+/* Handwritten Note with Arrow */
+.handwritten-callout {
+  position: absolute;
+  top: 92px;
+  right: 65px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  z-index: 5;
+  pointer-events: none;
+}
+.handwritten-text {
+  font-family: 'Caveat', cursive;
+  font-size: 34px;
+  color: #F472B6;
+  line-height: 1.1;
+  text-align: right;
+  text-shadow: 0 0 15px rgba(244, 114, 182, 0.5);
+  transform: rotate(-3deg);
+}
+.handwritten-arrow {
+  width: 48px;
+  height: 52px;
+  margin-top: 4px;
+  margin-right: 18px;
+  filter: drop-shadow(0 0 8px rgba(244, 114, 182, 0.6));
+}
+
+/* Headline Section */
 .header-wrap {
-  margin-top: 10px;
-  margin-bottom: 30px;
+  margin-bottom: 28px;
+  max-width: 820px;
 }
 .headline {
-  font-size: 96px; font-weight: 900;
+  font-size: 92px;
+  font-weight: 900;
   line-height: 0.95;
   letter-spacing: -0.02em;
   text-transform: uppercase;
+  color: #FFFFFF;
 }
 .gradient-text {
-  background: linear-gradient(135deg, #A855F7, #3B82F6, #EC4899);
+  background: linear-gradient(135deg, #38BDF8 0%, #818CF8 50%, #E879F9 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  display: inline-block;
+  display: inline;
 }
 .subtext {
-  font-size: 34px; color: #D1D5DB;
-  line-height: 1.4; margin-top: 20px;
-  max-width: 900px;
+  font-size: 30px;
+  color: #CBD5E1;
+  line-height: 1.35;
+  margin-top: 18px;
+  font-weight: 400;
 }
-.cards-container {
+
+/* 2x2 Grid Section */
+.grid-stage {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  flex: 1;
+  margin-bottom: 22px;
+}
+.showcase-card {
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 24px;
+  padding: 24px 24px;
+  backdrop-filter: blur(16px);
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+.showcase-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.5), transparent);
+}
+.card-info {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  flex: 1;
   justify-content: center;
+  min-width: 0;
 }
-.use-case-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 20px;
-  padding: 24px 32px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-}
-.card-label {
-  font-size: 36px; font-weight: 700;
-  color: #FFFFFF;
-  display: flex; align-items: center; gap: 16px;
-}
-.card-tag {
-  font-size: 20px;
-  font-weight: 600;
-  color: #A855F7;
-  background: rgba(168, 85, 247, 0.15);
-  border: 1px solid rgba(168, 85, 247, 0.3);
-  padding: 4px 12px;
-  border-radius: 8px;
-  letter-spacing: 0.05em;
+.card-pill {
+  align-self: flex-start;
+  padding: 5px 14px;
+  border-radius: 9999px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 2px;
   text-transform: uppercase;
+  margin-bottom: 12px;
 }
-.play-btn {
-  width: 160px; height: 90px;
-  border-radius: 12px;
+.pill-purple {
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.5);
+  color: #D8B4FE;
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.3);
+}
+.pill-cyan {
+  background: rgba(6, 182, 212, 0.15);
+  border: 1px solid rgba(6, 182, 212, 0.5);
+  color: #67E8F9;
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.3);
+}
+.pill-pink {
+  background: rgba(236, 72, 153, 0.15);
+  border: 1px solid rgba(236, 72, 153, 0.5);
+  color: #F472B6;
+  box-shadow: 0 0 12px rgba(236, 72, 153, 0.3);
+}
+.pill-blue {
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.5);
+  color: #93C5FD;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);
+}
+
+.card-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.card-prompt {
+  font-size: 20px;
+  color: #94A3B8;
+  line-height: 1.35;
+  font-style: italic;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  position: relative;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: #111827;
-  flex-shrink: 0;
 }
-.play-thumb-img {
-  width: 100%; height: 100%;
+
+/* Thumbnail with Video Play Button */
+.card-thumb {
+  width: 170px;
+  height: 170px;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  background: #090D16;
+}
+.card-thumb img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   display: block;
 }
-.play-icon {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(0,0,0,0.4);
-  font-size: 32px; color: white;
+.thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%);
 }
-.annotation-wrap {
+.play-btn-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
   display: flex;
-  justify-content: flex-end;
-  margin-top: 10px;
-  margin-bottom: 20px;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
 }
-.annotation {
-  font-family: 'Caveat', 'Inter', cursive;
-  font-style: italic; font-size: 32px;
-  color: #A855F7;
-  text-shadow: 0 0 15px rgba(168, 85, 247, 0.45);
+.play-btn-circle svg {
+  width: 20px;
+  height: 20px;
+  margin-left: 3px;
+  fill: #FFFFFF;
 }
+
+/* Flow Breadcrumbs (TEXT -> VIDEO -> REALITY) */
+.flow-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.flow-step {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  color: #94A3B8;
+  text-transform: uppercase;
+}
+.flow-arrow {
+  color: #38BDF8;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* Bottom Row */
 .bottom-row {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
+  padding-top: 10px;
 }
-.dots {
-  display: flex;
+.footer-tagline {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: #94A3B8;
+  text-transform: uppercase;
+  line-height: 1.45;
+}
+.cta-pill-btn {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 14px;
+  padding: 16px 36px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, rgba(30, 27, 75, 0.8), rgba(15, 23, 42, 0.9));
+  border: 1.5px solid #818CF8;
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.45), inset 0 0 15px rgba(129, 140, 248, 0.25);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #E0E7FF;
 }
-.dots span {
-  display: inline-block;
-  width: 12px; height: 12px;
-  border-radius: 50%;
-  background: #4B5563;
-}
-.dots span.active {
-  background: #7C3AED;
-  width: 32px;
-  border-radius: 6px;
-  box-shadow: 0 0 12px rgba(124, 58, 237, 0.6);
-}
-.arrow {
-  font-size: 40px;
-  color: #FFFFFF;
-  line-height: 1;
+.cta-pill-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: #818CF8;
+  stroke-width: 2.5;
 }
 </style>
 </head>
@@ -169,103 +332,144 @@ body {
 <div class="bg-image"></div>
 <div class="bg-overlay"></div>
 <div class="glow-orb"></div>
-<div class="content">
-  <div class="slide-num">{{ slide_counter|default('03 / 06') }}</div>
+<div class="glow-orb-cyan"></div>
 
+<div class="content">
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="category-tag">
+      {{ category|default('REAL POSSIBILITIES') }} <span>/</span> {{ '%02d'|format(slide_number|default(3)) }}
+    </div>
+    <div class="slide-num">{{ slide_counter|default('03 / 06') }}</div>
+  </div>
+
+  <!-- Handwritten Callout with curved arrow -->
+  <div class="handwritten-callout">
+    <div class="handwritten-text">
+      {{ annotation|default('Same tool. Different worlds.') }}
+    </div>
+    <svg class="handwritten-arrow" viewBox="0 0 40 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 5 C 18 8, 32 20, 24 35" stroke="#F472B6" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <path d="M15 32 L 24 36 L 27 27" stroke="#F472B6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+  </div>
+
+  <!-- Headline & Subtext -->
   <div class="header-wrap">
     <div class="headline">
       {% if headline_prefix and headline_highlight %}
         {{ headline_prefix }}<br>
         <span class="gradient-text">{{ headline_highlight }}</span>
       {% else %}
-        WHAT CAN YOU<br>
-        <span class="gradient-text">CREATE?</span>
+        ONE PROMPT.<br>
+        <span class="gradient-text">ENDLESS POSSIBILITIES.</span>
       {% endif %}
     </div>
-    <div class="subtext">{{ body_text|default(subtext)|default('From imagination to reality — here are some examples.') }}</div>
+    <div class="subtext">{{ body_text|default(subtext)|default("From ideas to stunning videos — here's what you can create with Google Veo 3.") }}</div>
   </div>
 
-  <div class="cards-container">
-    {% if showcase_items and showcase_items|length > 0 %}
-      {% for item in showcase_items[:4] %}
-        <div class="use-case-card">
-          <div class="card-label">
-            <span>{{ item.title|default('Cinematic Scenes') }}</span>
-            {% if item.tag %}<span class="card-tag">{{ item.tag }}</span>{% endif %}
+  <!-- 2x2 Grid of Cards -->
+  <div class="grid-stage">
+    {% set default_items = [
+      {"tag": "CINEMATIC", "pill_class": "pill-purple", "title": "Epic Landscapes", "prompt": '"A cinematic drone shot over a futuristic city at sunset..."', "asset": asset_thumb_cinematic},
+      {"tag": "CHARACTERS", "pill_class": "pill-cyan", "title": "Lifelike People", "prompt": '"A close-up of a traveler in a neon-lit Tokyo street, cinematic style..."', "asset": asset_thumb_anime},
+      {"tag": "PRODUCTS", "pill_class": "pill-pink", "title": "Stunning Ads", "prompt": '"A cinematic product ad for a sleek coffee machine, with steam and dramatic lighting..."', "asset": asset_thumb_sneaker},
+      {"tag": "ANIMATION", "pill_class": "pill-blue", "title": "Animated Worlds", "prompt": '"A cozy animated short of a little robot exploring a magical forest at night..."', "asset": asset_thumb_nature}
+    ] %}
+
+    {% if grid_cards and grid_cards|length > 0 %}
+      {% for card in grid_cards[:4] %}
+        {% set p_class = "pill-purple" if loop.index == 1 else ("pill-cyan" if loop.index == 2 else ("pill-pink" if loop.index == 3 else "pill-blue")) %}
+        {% set fallback_img = asset_thumb_cinematic if loop.index == 1 else (asset_thumb_anime if loop.index == 2 else (asset_thumb_sneaker if loop.index == 3 else asset_thumb_nature)) %}
+        <div class="showcase-card">
+          <div class="card-info">
+            <div class="card-pill {{ p_class }}">{{ card.tag|default('SHOWCASE') }}</div>
+            <div class="card-title">{{ card.title|default('Showcase Item') }}</div>
+            <div class="card-prompt">{{ card.prompt|default('"A stunning high-definition creation..."') }}</div>
           </div>
-          <div class="play-btn">
-            {% if loop.index == 1 and asset_thumb_cinematic %}
-              <img class="play-thumb-img" src="{{ asset_thumb_cinematic }}" alt="Preview">
-            {% elif loop.index == 2 and asset_thumb_anime %}
-              <img class="play-thumb-img" src="{{ asset_thumb_anime }}" alt="Preview">
-            {% elif loop.index == 3 and asset_thumb_sneaker %}
-              <img class="play-thumb-img" src="{{ asset_thumb_sneaker }}" alt="Preview">
-            {% elif loop.index == 4 and asset_thumb_nature %}
-              <img class="play-thumb-img" src="{{ asset_thumb_nature }}" alt="Preview">
+          <div class="card-thumb">
+            {% if card.image_url %}
+              <img src="{{ card.image_url }}" alt="Preview">
+            {% elif fallback_img %}
+              <img src="{{ fallback_img }}" alt="Preview">
             {% else %}
               <div style="width:100%;height:100%;background:linear-gradient(135deg,#1E1B4B,#0F172A);"></div>
             {% endif %}
-            <div class="play-icon">▶</div>
+            <div class="thumb-overlay"></div>
+            <div class="play-btn-circle">
+              <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% elif showcase_items and showcase_items|length > 0 %}
+      {% for item in showcase_items[:4] %}
+        {% set p_class = "pill-purple" if loop.index == 1 else ("pill-cyan" if loop.index == 2 else ("pill-pink" if loop.index == 3 else "pill-blue")) %}
+        {% set fallback_img = asset_thumb_cinematic if loop.index == 1 else (asset_thumb_anime if loop.index == 2 else (asset_thumb_sneaker if loop.index == 3 else asset_thumb_nature)) %}
+        {% set default_prompt = default_items[loop.index0].prompt if loop.index0 < default_items|length else '"Prompt preview..."' %}
+        <div class="showcase-card">
+          <div class="card-info">
+            <div class="card-pill {{ p_class }}">{{ item.tag|default('SHOWCASE') }}</div>
+            <div class="card-title">{{ item.title|default('Showcase Item') }}</div>
+            <div class="card-prompt">{{ item.prompt|default(default_prompt) }}</div>
+          </div>
+          <div class="card-thumb">
+            {% if fallback_img %}
+              <img src="{{ fallback_img }}" alt="Preview">
+            {% else %}
+              <div style="width:100%;height:100%;background:linear-gradient(135deg,#1E1B4B,#0F172A);"></div>
+            {% endif %}
+            <div class="thumb-overlay"></div>
+            <div class="play-btn-circle">
+              <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+            </div>
           </div>
         </div>
       {% endfor %}
     {% else %}
-      <div class="use-case-card">
-        <div class="card-label">
-          <span>Cinematic scenes</span>
-          <span class="card-tag">4K Ultra-Real</span>
+      {% for item in default_items %}
+        <div class="showcase-card">
+          <div class="card-info">
+            <div class="card-pill {{ item.pill_class }}">{{ item.tag }}</div>
+            <div class="card-title">{{ item.title }}</div>
+            <div class="card-prompt">{{ item.prompt }}</div>
+          </div>
+          <div class="card-thumb">
+            {% if item.asset %}
+              <img src="{{ item.asset }}" alt="Preview">
+            {% else %}
+              <div style="width:100%;height:100%;background:linear-gradient(135deg,#1E1B4B,#0F172A);"></div>
+            {% endif %}
+            <div class="thumb-overlay"></div>
+            <div class="play-btn-circle">
+              <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+            </div>
+          </div>
         </div>
-        <div class="play-btn">
-          {% if asset_thumb_cinematic %}<img class="play-thumb-img" src="{{ asset_thumb_cinematic }}" alt="Preview">{% endif %}
-          <div class="play-icon">▶</div>
-        </div>
-      </div>
-      <div class="use-case-card">
-        <div class="card-label">
-          <span>Animated stories</span>
-          <span class="card-tag">Anime & 3D</span>
-        </div>
-        <div class="play-btn">
-          {% if asset_thumb_anime %}<img class="play-thumb-img" src="{{ asset_thumb_anime }}" alt="Preview">{% endif %}
-          <div class="play-icon">▶</div>
-        </div>
-      </div>
-      <div class="use-case-card">
-        <div class="card-label">
-          <span>Product videos</span>
-          <span class="card-tag">Commercial CGI</span>
-        </div>
-        <div class="play-btn">
-          {% if asset_thumb_sneaker %}<img class="play-thumb-img" src="{{ asset_thumb_sneaker }}" alt="Preview">{% endif %}
-          <div class="play-icon">▶</div>
-        </div>
-      </div>
-      <div class="use-case-card">
-        <div class="card-label">
-          <span>Nature & travel visuals</span>
-          <span class="card-tag">Cinematic 8K</span>
-        </div>
-        <div class="play-btn">
-          {% if asset_thumb_nature %}<img class="play-thumb-img" src="{{ asset_thumb_nature }}" alt="Preview">{% endif %}
-          <div class="play-icon">▶</div>
-        </div>
-      </div>
+      {% endfor %}
     {% endif %}
   </div>
 
-  <div class="annotation-wrap">
-    <div class="annotation">
-      {{ annotation|default(annotation_text)|default('Same tool. Endless possibilities.') }} ↘
-    </div>
+  <!-- Flow Breadcrumbs -->
+  <div class="flow-bar">
+    {% set steps_list = flow_steps|default(['TEXT', 'VIDEO', 'REALITY']) %}
+    {% for s in steps_list %}
+      <span class="flow-step">{{ s }}</span>
+      {% if not loop.last %}
+        <span class="flow-arrow">→</span>
+      {% endif %}
+    {% endfor %}
   </div>
 
+  <!-- Bottom Row: Tagline + Glowing Pill Button -->
   <div class="bottom-row">
-    <div class="dots">
-      <span></span><span></span>
-      <span class="active"></span>
-      <span></span><span></span><span></span>
+    <div class="footer-tagline">
+      {{ tagline_left|default('BIGGER IDEAS.<br>BRIGHTER REALITIES.')|safe }}
     </div>
-    <div class="arrow">→</div>
+    <div class="cta-pill-btn">
+      <span>{{ cta_button_text|default('WHAT WILL YOU CREATE?') }}</span>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
   </div>
 </div>
 </body>

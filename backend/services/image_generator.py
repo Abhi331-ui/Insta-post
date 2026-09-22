@@ -137,15 +137,13 @@ class ImageGenerator:
         ]
         if slide_number == 1:
             # If an explicit specific hero variant was provided (e.g. hero_terminal), use it directly
-            if layout_type in hero_variants and layout_type != "hero":
-                actual_layout = layout_type
-            elif content.get("layout_variant") in hero_variants:
+            if content.get("layout_variant") in hero_variants:
                 actual_layout = content["layout_variant"]
+            elif layout_type in hero_variants and layout_type != "hero":
+                actual_layout = layout_type
             else:
-                # Generic "hero" requested: cycle across all 10 distinct hero styles
-                # using post_id so each consecutive post gets a completely unique hero
-                variant_idx = max(0, post_id - 1) % len(hero_variants)
-                actual_layout = hero_variants[variant_idx]
+                # Default to the updated cosmic discovery hero template
+                actual_layout = "hero_editorial"
 
         # Background image with rotation across 10 distinct atmospheric AI textures
         custom_bg = content.get("background_image_url") or content.get("bg_image")
@@ -197,6 +195,16 @@ class ImageGenerator:
             "comparison_right_title": content.get("comparison_right_title", "PromptPulse Way"),
             "comparison_right_items": content.get("comparison_right_items", []),
             "workflow_nodes": content.get("workflow_nodes", []),
+            "feature_pills": content.get("feature_pills", []),
+            "mockup_prompt": content.get("mockup_prompt", ""),
+            "grid_cards": content.get("grid_cards", []),
+            "flow_steps": content.get("flow_steps", ["TEXT", "VIDEO", "REALITY"]),
+            "rows": content.get("rows", []),
+            "cta_button_text": content.get("cta_button_text", ""),
+            "tagline_left": content.get("tagline_left", ""),
+            "tagline_right": content.get("tagline_right", ""),
+            "dm_keyword": content.get("dm_keyword", "VEO"),
+            "dm_message": content.get("dm_message", ""),
             "primary_color": brand.get("primary_color", settings.PRIMARY_COLOR),
             "background_color": brand.get("background_color", settings.BACKGROUND_COLOR),
             "text_color": brand.get("text_color", settings.TEXT_COLOR),
@@ -206,15 +214,15 @@ class ImageGenerator:
         }
 
         # Embedded high-res visual assets matching the reference collage
+        context["asset_thumb_cinematic"] = self.get_asset_base64("s3_thumb_cinematic.png")
+        context["asset_thumb_anime"] = self.get_asset_base64("s3_thumb_anime.png")
+        context["asset_thumb_sneaker"] = self.get_asset_base64("s3_thumb_sneaker.png")
+        context["asset_thumb_nature"] = self.get_asset_base64("s3_thumb_nature.png")
+
         if actual_layout in hero_variants:
             context["asset_slide1_portal"] = self.get_asset_base64("slide1_portal.png")
         elif actual_layout == "tool_card":
             context["asset_slide2_tile"] = self.get_asset_base64("slide2_tile.png")
-        elif actual_layout == "showcase":
-            context["asset_thumb_cinematic"] = self.get_asset_base64("s3_thumb_cinematic.png")
-            context["asset_thumb_anime"] = self.get_asset_base64("s3_thumb_anime.png")
-            context["asset_thumb_sneaker"] = self.get_asset_base64("s3_thumb_sneaker.png")
-            context["asset_thumb_nature"] = self.get_asset_base64("s3_thumb_nature.png")
         elif actual_layout == "steps":
             context["asset_slide4_wave"] = self.get_asset_base64("slide4_wave.png")
         elif actual_layout == "comparison":
@@ -225,7 +233,7 @@ class ImageGenerator:
             context["asset_slide6_helmet"] = self.get_asset_base64("slide6_helmet.png")
 
         template_map = {
-            "hero": "hero.html",
+            "hero": "hero_editorial.html",
             "hero_editorial": "hero_editorial.html",
             "hero_terminal": "hero_terminal.html",
             "hero_badge": "hero_badge.html",
@@ -242,7 +250,7 @@ class ImageGenerator:
             "workflow": "workflow.html",
             "cta": "cta.html",
         }
-        template_name = template_map.get(actual_layout, "hero.html")
+        template_name = template_map.get(actual_layout, "hero_editorial.html")
 
         # Attempt Playwright / html2image rendering first
         rendered = False

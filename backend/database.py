@@ -48,3 +48,74 @@ def init_db():
             except Exception:
                 pass
 
+        try:
+            conn.execute(text("SELECT posting_times FROM brand_settings LIMIT 1"))
+        except Exception:
+            try:
+                conn.rollback()
+            except Exception:
+                pass
+            try:
+                conn.execute(text("ALTER TABLE brand_settings ADD COLUMN posting_times TEXT DEFAULT '[\"09:00\"]'"))
+                conn.commit()
+            except Exception:
+                pass
+
+        # Safe auto-migration for Telegram columns
+        for col, col_type in [
+            ("telegram_bot_token", "VARCHAR(200)"),
+            ("telegram_chat_id", "VARCHAR(100)"),
+            ("telegram_connected", "BOOLEAN DEFAULT FALSE"),
+        ]:
+            try:
+                conn.execute(text(f"SELECT {col} FROM brand_settings LIMIT 1"))
+            except Exception:
+                try:
+                    conn.rollback()
+                except Exception:
+                    pass
+                try:
+                    conn.execute(text(f"ALTER TABLE brand_settings ADD COLUMN {col} {col_type}"))
+                    conn.commit()
+                except Exception:
+                    pass
+
+        # Safe auto-migration for Instagram profile columns
+        for col, col_type in [
+            ("username", "VARCHAR(100)"),
+            ("profile_picture_url", "VARCHAR(500)"),
+        ]:
+            try:
+                conn.execute(text(f"SELECT {col} FROM instagram_accounts LIMIT 1"))
+            except Exception:
+                try:
+                    conn.rollback()
+                except Exception:
+                    pass
+                try:
+                    conn.execute(text(f"ALTER TABLE instagram_accounts ADD COLUMN {col} {col_type}"))
+                    conn.commit()
+                except Exception:
+                    pass
+
+        # Safe auto-migration for Post monetization columns
+        for col, col_type in [
+            ("share_token", "VARCHAR(64)"),
+            ("dm_keyword", "VARCHAR(50)"),
+            ("dm_message", "TEXT"),
+            ("client_feedback", "TEXT"),
+        ]:
+            try:
+                conn.execute(text(f"SELECT {col} FROM posts LIMIT 1"))
+            except Exception:
+                try:
+                    conn.rollback()
+                except Exception:
+                    pass
+                try:
+                    conn.execute(text(f"ALTER TABLE posts ADD COLUMN {col} {col_type}"))
+                    conn.commit()
+                except Exception:
+                    pass
+
+

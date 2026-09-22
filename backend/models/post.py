@@ -31,6 +31,12 @@ class Post(Base):
     scheduled_at = Column(DateTime, nullable=True)
     published_at = Column(DateTime, nullable=True)
 
+    # Monetization & Client Collaboration
+    share_token = Column(String(64), unique=True, index=True, nullable=True)
+    dm_keyword = Column(String(50), nullable=True)
+    dm_message = Column(Text, nullable=True)
+    client_feedback = Column(Text, nullable=True)
+
     sources = Column(JSON, default=list)  # list of URLs and source details
     scores = Column(JSON, default=dict)   # composite and sub-scores
     created_at = Column(DateTime, default=datetime.utcnow)

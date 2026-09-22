@@ -19,7 +19,11 @@ class InstagramService:
         self.base_url = f"https://graph.facebook.com/{self.graph_version}"
 
     def is_configured(self) -> bool:
-        return bool(self.access_token and self.instagram_user_id)
+        if not self.access_token or not self.instagram_user_id:
+            return False
+        if self.access_token.startswith(("TEST_", "MOCK_", "test_", "mock_")):
+            return False
+        return True
 
     def get_auth_url(self) -> str:
         """Generate Meta OAuth authorization URL."""
@@ -60,9 +64,56 @@ class InstagramService:
         long_token = long_data.get("access_token", short_token)
         expires_in = long_data.get("expires_in", 5184000)  # default 60 days in seconds
 
+        # 3. Automatically discover linked Instagram Business Account ID and Profile
+        instagram_user_id = None
+        page_name = "Instagram Business Account"
+        username = None
+        profile_picture_url = None
+
+        try:
+            accounts_res = requests.get(
+                f"{self.base_url}/me/accounts",
+                params={
+                    "fields": "id,name,instagram_business_account{id,name,username,profile_picture_url}",
+                    "access_token": long_token,
+                },
+                timeout=15,
+            )
+            accounts_data = accounts_res.json()
+            for page in accounts_data.get("data", []):
+                ig_biz = page.get("instagram_business_account")
+                if ig_biz and "id" in ig_biz:
+                    instagram_user_id = ig_biz["id"]
+                    page_name = ig_biz.get("name") or page.get("name")
+                    username = ig_biz.get("username")
+                    profile_picture_url = ig_biz.get("profile_picture_url")
+                    break
+        except Exception:
+            pass
+
+        # Fallback query directly to /me if accounts didn't return business account
+        if not instagram_user_id:
+            try:
+                me_res = requests.get(
+                    f"{self.base_url}/me",
+                    params={"fields": "id,name,username", "access_token": long_token},
+                    timeout=10,
+                )
+                me_data = me_res.json()
+                if "id" in me_data:
+                    instagram_user_id = me_data["id"]
+                    username = me_data.get("username")
+                    page_name = me_data.get("name") or page_name
+            except Exception:
+                pass
+
         return {
             "access_token": long_token,
             "expires_at": datetime.utcnow() + timedelta(seconds=expires_in),
+            "instagram_user_id": instagram_user_id,
+            "page_name": page_name,
+            "username": username,
+            "profile_picture_url": profile_picture_url,
         }
 
     def refresh_long_lived_token(self, current_token: str) -> Dict[str, Any]:
@@ -240,5 +291,224 @@ class InstagramService:
             "engagement_rate": engagement_rate,
         }
 
+    def get_account_profile(
+        self,
+        access_token: Optional[str] = None,
+        instagram_user_id: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Fetch Instagram account profile info (username, name, profile_picture_url)."""
+        token = access_token or self.access_token
+        user_id = instagram_user_id or self.instagram_user_id
+
+        if not token or not user_id or user_id.startswith("test_"):
+            return {
+                "username": "promptpulse.ai",
+                "name": "PromptPulse AI",
+                "profile_picture_url": None,
+            }
+
+        try:
+            url = f"{self.base_url}/{user_id}"
+            params = {
+                "fields": "username,name,profile_picture_url",
+                "access_token": token,
+            }
+            res = requests.get(url, params=params, timeout=10)
+            data = res.json()
+            if "username" in data:
+                return {
+                    "username": data.get("username"),
+                    "name": data.get("name") or data.get("username"),
+                    "profile_picture_url": data.get("profile_picture_url"),
+                }
+        except Exception:
+            pass
+
+        return {
+            "username": None,
+            "name": None,
+            "profile_picture_url": None,
+        }
+
+    def get_post_comments(
+        self,
+        instagram_post_id: str,
+        access_token: Optional[str] = None,
+    ) -> List[Dict[str, Any]]:
+        """Fetch comments for a published Instagram post."""
+        token = access_token or self.access_token
+
+        if not token or instagram_post_id.startswith("ig_sim_"):
+            # Simulated comments for dev/test mode
+            import random
+            sim_users = [
+                {"username": "tech_founder", "text": "TOOLKIT please! Great breakdown."},
+                {"username": "alex_creator", "text": "Can you send the guide? Looking to implement this."},
+                {"username": "sarah_ai", "text": "TOOLKIT - awesome slides as always!"},
+                {"username": "growth_marketer", "text": "Really insightful comparison on slide 5."},
+            ]
+            sample = random.sample(sim_users, k=min(len(sim_users), 2))
+            return [
+                {
+                    "id": f"sim_cmt_{int(time.time())}_{idx}",
+                    "text": item["text"],
+                    "from": {"id": f"sim_user_{idx}", "username": item["username"]},
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+                for idx, item in enumerate(sample)
+            ]
+
+        try:
+            url = f"{self.base_url}/{instagram_post_id}/comments"
+            params = {
+                "fields": "id,text,from{id,username},timestamp",
+                "access_token": token,
+                "limit": 50,
+            }
+            res = requests.get(url, params=params, timeout=12)
+            data = res.json()
+            return data.get("data", [])
+        except Exception:
+            return []
+
+    def reply_to_comment(
+        self,
+        comment_id: str,
+        message: str,
+        access_token: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Post a public reply to a comment."""
+        token = access_token or self.access_token
+
+        if not token or token.startswith(("TEST_", "MOCK_", "test_", "mock_")) or comment_id.startswith(("sim_", "test_")):
+            return {
+                "success": True,
+                "simulated": True,
+                "id": f"sim_reply_{int(time.time())}",
+                "message": "Simulated reply sent.",
+            }
+
+        try:
+            url = f"{self.base_url}/{comment_id}/replies"
+            res = requests.post(url, data={"message": message, "access_token": token}, timeout=15)
+            return res.json()
+        except Exception as e:
+            return {"error": str(e)}
+
+    def send_private_reply(
+        self,
+        comment_id: str,
+        message: str,
+        access_token: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Send an automated private DM response to a commenter using Meta's Private Replies API."""
+        token = access_token or self.access_token
+
+        if not token or token.startswith(("TEST_", "MOCK_", "test_", "mock_")) or comment_id.startswith(("sim_", "test_")):
+            return {
+                "success": True,
+                "simulated": True,
+                "message": "Simulated private reply DM sent.",
+            }
+
+        try:
+            url = f"{self.base_url}/me/messages"
+            payload = {
+                "recipient": {"comment_id": comment_id},
+                "message": {"text": message},
+            }
+            res = requests.post(
+                url,
+                json=payload,
+                headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+                timeout=15,
+            )
+            return res.json()
+        except Exception as e:
+            return {"error": str(e)}
+
+    def get_direct_messages(
+        self,
+        access_token: Optional[str] = None,
+        instagram_user_id: Optional[str] = None,
+    ) -> List[Dict[str, Any]]:
+        """Fetch incoming direct messages and conversation threads."""
+        token = access_token or self.access_token
+        user_id = instagram_user_id or self.instagram_user_id
+
+        if not token or not user_id or user_id.startswith("test_"):
+            return [
+                {
+                    "id": f"sim_conv_1",
+                    "sender_username": "sarah_ai",
+                    "sender_id": "sim_user_1",
+                    "message": "Hey! Could you share the prompt cheat sheet from today's post?",
+                    "created_time": datetime.utcnow().isoformat(),
+                },
+                {
+                    "id": f"sim_conv_2",
+                    "sender_username": "tech_founder",
+                    "sender_id": "sim_user_2",
+                    "message": "Love your content! How often do you post?",
+                    "created_time": datetime.utcnow().isoformat(),
+                },
+            ]
+
+        try:
+            url = f"{self.base_url}/{user_id}/conversations"
+            params = {
+                "fields": "messages{id,message,from{id,username},created_time}",
+                "access_token": token,
+                "limit": 20,
+            }
+            res = requests.get(url, params=params, timeout=12)
+            data = res.json()
+            conversations = []
+            for item in data.get("data", []):
+                for msg in item.get("messages", {}).get("data", []):
+                    conversations.append({
+                        "id": msg.get("id"),
+                        "sender_username": msg.get("from", {}).get("username", "user"),
+                        "sender_id": msg.get("from", {}).get("id"),
+                        "message": msg.get("message"),
+                        "created_time": msg.get("created_time"),
+                    })
+            return conversations
+        except Exception:
+            return []
+
+    def send_direct_message(
+        self,
+        recipient_id: str,
+        message: str,
+        access_token: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Send a direct message to a user."""
+        token = access_token or self.access_token
+
+        if not token or token.startswith(("TEST_", "MOCK_", "test_", "mock_")) or recipient_id.startswith(("sim_", "test_")):
+            return {
+                "success": True,
+                "simulated": True,
+                "message": "Simulated DM sent.",
+            }
+
+        try:
+            url = f"{self.base_url}/me/messages"
+            payload = {
+                "recipient": {"id": recipient_id},
+                "message": {"text": message},
+            }
+            res = requests.post(
+                url,
+                json=payload,
+                headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+                timeout=15,
+            )
+            return res.json()
+        except Exception as e:
+            return {"error": str(e)}
+
 
 instagram_service = InstagramService()
+

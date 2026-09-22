@@ -54,6 +54,11 @@ export default function SlidePreview({ postId, slides, onSlideUpdated }: SlidePr
     setImgError(false);
   }, [postId]);
 
+  // Reset image error state whenever switching slides
+  useEffect(() => {
+    setImgError(false);
+  }, [currentIndex]);
+
   if (!slides || slides.length === 0) {
     return (
       <div className="aspect-[4/5] w-full max-w-md mx-auto bg-slate-900 border border-slate-800 rounded-2xl flex flex-col items-center justify-center p-8 text-center text-slate-500">
@@ -184,9 +189,39 @@ export default function SlidePreview({ postId, slides, onSlideUpdated }: SlidePr
           disabled={isRegenerating}
           className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 transition-colors disabled:opacity-50"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${isRegenerating ? "animate-spin text-blue-400" : ""}`} />
+          <RefreshCw className={`w-3.5 h-3.5 ${isRegenerating ? "animate-spin text-purple-400" : ""}`} />
           {isRegenerating ? "Regenerating..." : currentSlide.slide_number === 1 ? "Shuffle Hero Style" : "Regen This Slide"}
         </button>
+      </div>
+
+      {/* Monetization Actions Bar */}
+      <div className="flex items-center gap-2 w-full mt-3">
+        <button
+          onClick={async () => {
+            try {
+              const res = await (await import("@/lib/api")).getShareLink(postId);
+              if (res.share_url) {
+                await navigator.clipboard.writeText(res.share_url);
+                alert("Client Review Link copied to clipboard!");
+              }
+            } catch (e: any) {
+              alert("Error copying link: " + e.message);
+            }
+          }}
+          className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-purple-600/15 hover:bg-purple-600/25 text-purple-300 border border-purple-500/30 text-xs font-semibold transition-all active:scale-95"
+        >
+          <Layers className="w-3.5 h-3.5" />
+          Share with Client
+        </button>
+
+        <a
+          href={`${process.env.NEXT_PUBLIC_API_URL || "/api"}/posts/${postId}/export-pdf`}
+          download
+          className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-slate-200 border border-white/[0.1] text-xs font-semibold transition-all"
+        >
+          <span className="text-sky-400">📄</span>
+          LinkedIn PDF
+        </a>
       </div>
     </div>
   );
